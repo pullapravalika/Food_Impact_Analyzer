@@ -1,24 +1,38 @@
 from flask import jsonify
+from database.db_connection import get_connection
 
-users = []
 
 def register_user(data):
 
-    user = {
-        "name": data["name"],
-        "email": data["email"],
-        "password": data["password"]
-    }
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    users.append(user)
+    query = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
+    values = (data["name"], data["email"], data["password"])
+
+    cursor.execute(query, values)
+    conn.commit()
+
+    cursor.close()
+    conn.close()
 
     return jsonify({"message": "User registered successfully"})
 
 
 def login_user(data):
 
-    for user in users:
-        if user["email"] == data["email"] and user["password"] == data["password"]:
-            return jsonify({"message": "Login successful"})
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = "SELECT * FROM users WHERE email=%s AND password=%s"
+    cursor.execute(query, (data["email"], data["password"]))
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if user:
+        return jsonify({"message": "Login successful"})
 
     return jsonify({"message": "Invalid credentials"})

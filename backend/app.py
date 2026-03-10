@@ -1,12 +1,15 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from database.db_connection import get_connection
 
 app = Flask(__name__)
 CORS(app)
 
-users = []
 
-# Home route (ADD THIS HERE)
+# Home route
 @app.route('/')
 def home():
     return "Food Impact Analyzer Backend Running"
@@ -15,15 +18,20 @@ def home():
 # Register API
 @app.route('/register', methods=['POST'])
 def register():
+
     data = request.json
 
-    user = {
-        "name": data["name"],
-        "email": data["email"],
-        "password": data["password"]
-    }
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    users.append(user)
+    query = "INSERT INTO users (name,email,password) VALUES (%s,%s,%s)"
+    values = (data["name"], data["email"], data["password"])
+
+    cursor.execute(query, values)
+    conn.commit()
+
+    cursor.close()
+    conn.close()
 
     return jsonify({"message": "User registered successfully"})
 
@@ -31,11 +39,22 @@ def register():
 # Login API
 @app.route('/login', methods=['POST'])
 def login():
+
     data = request.json
 
-    for user in users:
-        if user["email"] == data["email"] and user["password"] == data["password"]:
-            return jsonify({"message": "Login successful"})
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = "SELECT * FROM users WHERE email=%s AND password=%s"
+    cursor.execute(query, (data["email"], data["password"]))
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if user:
+        return jsonify({"message": "Login successful"})
 
     return jsonify({"message": "Invalid credentials"})
 
@@ -55,10 +74,27 @@ def analyze_food():
     }
 
     if food in food_data:
+
         category = food_data[food]["category"]
         calories = food_data[food]["calories"]
-
         health_score = 80 if category == "healthy" else 40
+
+        # store in database
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        query = """
+        INSERT INTO food_logs (user_id,food_name,calories,category,health_score)
+        VALUES (%s,%s,%s,%s,%s)
+        """
+
+        values = (1, food, calories, category, health_score)
+
+        cursor.execute(query, values)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
 
         return jsonify({
             "food": food,
