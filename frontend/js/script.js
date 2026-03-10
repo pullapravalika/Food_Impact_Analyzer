@@ -1,34 +1,125 @@
-// Login form handler
-document.addEventListener("DOMContentLoaded", function(){
+// REGISTER
 
-    const loginForm = document.querySelector("form");
+document.getElementById("registerForm")?.addEventListener("submit", async function(e){
 
-    if(loginForm){
+e.preventDefault()
 
-        loginForm.addEventListener("submit", function(event){
+const name = document.getElementById("name").value
+const email = document.getElementById("email").value
+const password = document.getElementById("password").value
 
-            event.preventDefault();
+const response = await fetch("http://127.0.0.1:5000/register",{
 
-            alert("Login functionality will connect to backend soon!");
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
 
-        });
+body:JSON.stringify({
+name:name,
+email:email,
+password:password
+})
 
-    }
+})
 
-});
+const data = await response.json()
+
+alert(data.message)
+
+})
 
 
-// Register form handler
-function registerUser(){
 
-    alert("User registration will be connected to backend!");
+
+
+// LOGIN
+
+document.getElementById("loginForm")?.addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const email = document.getElementById("loginEmail").value
+const password = document.getElementById("loginPassword").value
+
+const response = await fetch("http://127.0.0.1:5000/login",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email:email,
+password:password
+})
+
+})
+
+const data = await response.json()
+
+alert(data.message)
+
+if(data.message === "Login successful"){
+
+window.location.href = "food_input.html"
 
 }
 
+})
 
-// Food analysis handler
-function analyzeFood(){
 
-    alert("Food will be analyzed once backend API is ready!");
+
+
+
+
+// FOOD ANALYSIS
+
+document.getElementById("foodForm")?.addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const food = document.getElementById("foodName").value
+
+const response = await fetch("http://127.0.0.1:5000/analyze_food",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+food:food
+})
+
+})
+
+const data = await response.json()
+
+localStorage.setItem("foodResult", JSON.stringify(data))
+
+window.location.href = "dashboard.html"
+
+})
+
+
+
+
+
+
+// DASHBOARD RESULT DISPLAY
+
+if(window.location.pathname.includes("dashboard.html")){
+
+const result = JSON.parse(localStorage.getItem("foodResult"))
+
+if(result){
+
+document.getElementById("foodItem").textContent = result.food
+document.getElementById("calories").textContent = result.calories
+document.getElementById("healthScore").textContent = result.health_score
+document.getElementById("category").textContent = result.category
+
+}
 
 }

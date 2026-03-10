@@ -2,59 +2,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Input - Food Impact Analyzer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
+<title>Food Input - Food Impact Analyzer</title>
+
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header>
-    <h1>Food Impact Analyzer</h1>
+<h1>Food Impact Analyzer</h1>
 </header>
 
 <section class="food-container">
 
-    <h2>Enter Food Details</h2>
+<h2>Enter Food Details</h2>
 
-    <form>
+<form id="foodForm">
 
-        <div class="input-group">
-            <label>Food Name</label>
-            <input type="text" placeholder="Enter food item (e.g., Pizza)" required>
-        </div>
+<div class="input-group">
+<label for="foodName">Food Name</label>
+<input type="text" id="foodName" placeholder="Enter food item (e.g., Pizza)" required>
+</div>
 
-        <div class="input-group">
-            <label>Meal Type</label>
+<div class="input-group">
+<label for="mealType">Meal Type</label>
 
-            <select required>
-                <option value="">Select Meal</option>
-                <option>Breakfast</option>
-                <option>Lunch</option>
-                <option>Dinner</option>
-                <option>Snack</option>
-            </select>
+<select id="mealType">
+<option value="">Select Meal</option>
+<option value="Breakfast">Breakfast</option>
+<option value="Lunch">Lunch</option>
+<option value="Dinner">Dinner</option>
+<option value="Snack">Snack</option>
+</select>
 
-        </div>
+</div>
 
-        <div class="input-group">
-            <label>Quantity</label>
-            <input type="number" placeholder="Enter quantity" required>
-        </div>
+<div class="input-group">
+<label for="quantity">Quantity</label>
+<input type="number" id="quantity" placeholder="Enter quantity">
+</div>
 
-        <button type="submit">Analyze Food</button>
+<button type="submit">Analyze Food</button>
 
-    </form>
+</form>
 
 </section>
 
 <footer>
-    <p>© 2026 Food Impact Analyzer</p>
+<p>© 2026 Food Impact Analyzer</p>
 </footer>
+
 <script src="js/script.js"></script>
 
 </body>
-
 </html>
