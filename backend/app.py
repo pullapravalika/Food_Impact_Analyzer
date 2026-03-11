@@ -1,22 +1,68 @@
 import sys
 import os
+
+# Allow project root imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from flask import Flask, request, jsonify
+
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from database.db_connection import get_connection
+import webbrowser
+
+# Base directories
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 app = Flask(__name__)
 CORS(app)
 
 
-# Home route
-@app.route('/')
+# =============================
+# Serve HTML Pages
+# =============================
+
+@app.route("/")
 def home():
-    return "Food Impact Analyzer Backend Running"
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+@app.route("/login_page")
+def login_page():
+    return send_from_directory(FRONTEND_DIR, "login.html")
+
+@app.route("/register_page")
+def register_page():
+    return send_from_directory(FRONTEND_DIR, "register.html")
 
 
+@app.route("/dashboard_page")
+def dashboard_page():
+    return send_from_directory(FRONTEND_DIR, "dashboard.html")
+
+
+@app.route("/food_input_page")
+def food_input_page():
+    return send_from_directory(FRONTEND_DIR, "food_input.html")
+
+
+# =============================
+# Serve Static Files
+# =============================
+
+@app.route("/css/<path:filename>")
+def serve_css(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "css"), filename)
+
+
+@app.route("/js/<path:filename>")
+def serve_js(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "js"), filename)
+
+
+# =============================
 # Register API
-@app.route('/register', methods=['POST'])
+# =============================
+
+@app.route("/register", methods=["POST"])
 def register():
 
     data = request.json
@@ -24,20 +70,29 @@ def register():
     conn = get_connection()
     cursor = conn.cursor()
 
-    query = "INSERT INTO users (name,email,password) VALUES (%s,%s,%s)"
-    values = (data["name"], data["email"], data["password"])
+    try:
 
-    cursor.execute(query, values)
-    conn.commit()
+        query = "INSERT INTO users (name,email,password) VALUES (%s,%s,%s)"
+        values = (data["name"], data["email"], data["password"])
 
-    cursor.close()
-    conn.close()
+        cursor.execute(query, values)
+        conn.commit()
 
-    return jsonify({"message": "User registered successfully"})
+        return jsonify({"message": "User registered successfully"})
 
+    except Exception as e:
 
+        return jsonify({"message": "Email already registered"})
+
+    finally:
+        cursor.close()
+        conn.close()
+
+# =============================
 # Login API
-@app.route('/login', methods=['POST'])
+# =============================
+
+@app.route("/login", methods=["POST"])
 def login():
 
     data = request.json
@@ -59,8 +114,11 @@ def login():
     return jsonify({"message": "Invalid credentials"})
 
 
+# =============================
 # Food Analysis API
-@app.route('/analyze_food', methods=['POST'])
+# =============================
+
+@app.route("/analyze_food", methods=["POST"])
 def analyze_food():
 
     data = request.json
@@ -79,7 +137,6 @@ def analyze_food():
         calories = food_data[food]["calories"]
         health_score = 80 if category == "healthy" else 40
 
-        # store in database
         conn = get_connection()
         cursor = conn.cursor()
 
@@ -111,5 +168,10 @@ def analyze_food():
     })
 
 
+# =============================
+# Run Server
+# =============================
+
 if __name__ == "__main__":
+    webbrowser.open("http://127.0.0.1:5000")
     app.run(debug=True)

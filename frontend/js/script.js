@@ -8,7 +8,7 @@ const name = document.getElementById("name").value
 const email = document.getElementById("email").value
 const password = document.getElementById("password").value
 
-const response = await fetch("http://127.0.0.1:5000/register",{
+const response = await fetch("/register",{
 
 method:"POST",
 headers:{
@@ -27,10 +27,13 @@ const data = await response.json()
 
 alert(data.message)
 
+if(data.message === "User registered successfully"){
+
+window.location.href = "/"
+
+}
+
 })
-
-
-
 
 
 // LOGIN
@@ -62,7 +65,7 @@ alert(data.message)
 
 if(data.message === "Login successful"){
 
-window.location.href = "food_input.html"
+window.location.href = "/food_input_page"
 
 }
 
@@ -98,7 +101,7 @@ const data = await response.json()
 
 localStorage.setItem("foodResult", JSON.stringify(data))
 
-window.location.href = "dashboard.html"
+window.location.href = "/dashboard_page"
 
 })
 
@@ -109,7 +112,7 @@ window.location.href = "dashboard.html"
 
 // DASHBOARD RESULT DISPLAY
 
-if(window.location.pathname.includes("dashboard.html")){
+if(window.location.pathname.includes("dashboard_page")){
 
 const result = JSON.parse(localStorage.getItem("foodResult"))
 
