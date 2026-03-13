@@ -27,6 +27,9 @@ const data = await response.json()
 
 alert(data.message)
 
+if(data.message === "User registered successfully"){
+    window.location.href = "login.html"
+}
 })
 
 
@@ -107,6 +110,21 @@ window.location.href = "dashboard.html"
 
 
 
+// DASHBOARD RESULT DISPLAY
+
+if(window.location.pathname.includes("dashboard.html")){
+
+const result = JSON.parse(localStorage.getItem("foodResult"))
+
+if(result){
+
+document.getElementById("foodItem").textContent = result.food
+document.getElementById("calories").textContent = result.calories
+document.getElementById("healthScore").textContent = result.health_score
+document.getElementById("category").textContent = result.category
+
+}
+}
 // DASHBOARD RESULT DISPLAY
 
 if(window.location.pathname.includes("dashboard.html")){

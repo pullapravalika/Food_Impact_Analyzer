@@ -24,7 +24,7 @@ def register():
     conn = get_connection()
     cursor = conn.cursor()
 
-    query = "INSERT INTO users (name,email,password) VALUES (%s,%s,%s)"
+    query = "INSERT INTO users (name,email,password) VALUES (?,?,?)"
     values = (data["name"], data["email"], data["password"])
 
     cursor.execute(query, values)
@@ -43,9 +43,9 @@ def login():
     data = request.json
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    query = "SELECT * FROM users WHERE email=%s AND password=%s"
+    query = "SELECT * FROM users WHERE email=? AND password=?"
     cursor.execute(query, (data["email"], data["password"]))
 
     user = cursor.fetchone()
@@ -85,7 +85,7 @@ def analyze_food():
 
         query = """
         INSERT INTO food_logs (user_id,food_name,calories,category,health_score)
-        VALUES (%s,%s,%s,%s,%s)
+        VALUES (?,?,?,?,?)
         """
 
         values = (1, food, calories, category, health_score)
