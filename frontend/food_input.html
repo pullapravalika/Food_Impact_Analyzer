@@ -2,18 +2,29 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Food Analyzer</title>
 
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
 
 <header class="topbar">
+
 <h1>Food Impact Analyzer</h1>
+
+<nav>
+<a href="/dashboard_page">Dashboard</a>
+<a href="/login_page">Logout</a>
+</nav>
+
 </header>
+
 
 <section class="food-container">
 
@@ -21,74 +32,81 @@
 
 <div class="restaurant-grid">
 
+
 <div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
+
+<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" alt="Pizza">
+
 <h3>Pizza</h3>
+
 <p>⭐ 4.3 • 25 mins</p>
+
 <p>Italian, Fast Food</p>
+
 <button onclick="analyzeFood('pizza')">Analyze</button>
+
 </div>
 
+
 <div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349" alt="Burger">
+
 <h3>Burger</h3>
+
 <p>⭐ 4.2 • 20 mins</p>
+
 <p>American, Fast Food</p>
+
 <button onclick="analyzeFood('burger')">Analyze</button>
+
 </div>
 
+
 <div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
+
+<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Salad">
+
 <h3>Salad</h3>
+
 <p>⭐ 4.7 • 15 mins</p>
+
 <p>Healthy, Vegan</p>
+
 <button onclick="analyzeFood('salad')">Analyze</button>
+
 </div>
 
+
 <div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3">
+
+<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3" alt="Idli">
+
 <h3>Idli</h3>
+
 <p>⭐ 4.6 • 10 mins</p>
+
 <p>South Indian</p>
+
 <button onclick="analyzeFood('idli')">Analyze</button>
+
 </div>
+
 
 </div>
 
 </section>
 
+
 <footer>
+
 <p>© 2026 Food Impact Analyzer</p>
+
 </footer>
+
 
 <script src="/js/script.js"></script>
 
-<script>
-
-function analyzeFood(food){
-
-fetch("http://127.0.0.1:5000/analyze_food",{
-
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({food:food})
-
-})
-.then(res => res.json())
-.then(data => {
-
-localStorage.setItem("foodResult", JSON.stringify(data))
-
-window.location.href="dashboard.html"
-
-})
-
-}
-
-</script>
-
 </body>
+
 </html>

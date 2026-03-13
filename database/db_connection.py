@@ -1,12 +1,9 @@
 import sqlite3
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "foodimpact.db")
 
 def get_connection():
-
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="", 
-        database="food_impact_db"
-    )
-
+    connection = sqlite3.connect(DB_PATH)
     return connection

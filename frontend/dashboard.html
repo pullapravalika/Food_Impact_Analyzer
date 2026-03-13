@@ -1,46 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - Food Impact Analyzer</title>
+<title>Dashboard</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
 
-<header>
-<h1>Food Impact Analyzer</h1>
-</header>
-
-<section class="dashboard">
-
-<h2>Food Analysis Result</h2>
+<h1>Food Analysis Result</h1>
 
 <div class="result-card">
 
-<p><strong>Food Item:</strong> <span id="foodItem"></span></p>
+<p><b>Food:</b> <span id="foodItem"></span></p>
 
-<p><strong>Calories:</strong> <span id="calories"></span> kcal</p>
+<p><b>Calories:</b> <span id="calories"></span></p>
 
-<p><strong>Health Score:</strong> <span id="healthScore"></span> / 100</p>
+<p><b>Category:</b> <span id="category"></span></p>
 
-<p><strong>Food Category:</strong> <span id="category"></span></p>
+<p><b>Health Score:</b> <span id="healthScore"></span></p>
 
 </div>
 
-<a class="btn" href="food_input.html">Analyze Another Food</a>
 
-</section>
+<h2>Your Streak</h2>
 
-<footer>
-<p>© 2026 Food Impact Analyzer</p>
-</footer>
+<p>Healthy Streak: <span id="healthyStreak"></span></p>
 
-<script src="js/script.js"></script>
+<p>Junk Streak: <span id="junkStreak"></span></p>
+
+
+<h2>Healthy Suggestions</h2>
+
+<div id="suggestions"></div>
+
+
+<br>
+
+<a href="/food_input_page">Analyze Another Food</a>
+
+<script src="/js/script.js"></script>
 
 </body>
 
