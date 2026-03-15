@@ -1,3 +1,63 @@
+<script>
+
+if(localStorage.getItem("loggedIn") !== "true"){
+
+alert("Please login first")
+
+window.location.href="/login_page"
+
+}
+
+</script>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<h1>Food Analysis Result</h1>
+
+<div class="result-card">
+
+<p><b>Food:</b> <span id="foodItem"></span></p>
+
+<p><b>Calories:</b> <span id="calories"></span></p>
+
+<p><b>Category:</b> <span id="category"></span></p>
+
+<p><b>Health Score:</b> <span id="healthScore"></span></p>
+
+</div>
+
+
+<h2>Your Streak</h2>
+
+<p>Healthy Streak: <span id="healthyStreak"></span></p>
+
+<p>Junk Streak: <span id="junkStreak"></span></p>
+
+
+<h2>Healthy Suggestions</h2>
+
+<div id="suggestions"></div>
+
+
+<br>
+
+<a href="/food_input_page">Analyze Another Food</a>
+
+<script src="/js/script.js"></script>
+
+</body>
+
+</html>
 <!DOCTYPE html>
 <html>
 

@@ -2,23 +2,32 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Food Impact Analyzer</title>
 
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
 
-<header>
+<header class="topbar">
+
 <h1>Food Impact Analyzer</h1>
 
 <nav>
-<a href="/">Login</a>
+
+<a href="/">Home</a>
+<a href="/login_page">Login</a>
 <a href="/register_page">Register</a>
+<a href="/dashboard_page">Dashboard</a>
+<a href="/account">Account</a>
+
 </nav>
+
 </header>
 
 
@@ -34,8 +43,27 @@ habits and suggest healthier choices.
 </p>
 
 <div class="buttons">
-<a class="btn" href="/login_page">Get Started</a>
+
+<a class="btn" href="/login_page">Login</a>
 <a class="btn" href="/register_page">Create Account</a>
+
+</div>
+
+</section>
+
+
+<!-- STREAK SECTION -->
+
+<section class="streak-section">
+
+<h2>Your Health Streak</h2>
+
+<div class="streak-box">
+
+<p>🔥 Healthy Streak: <span id="healthyStreak">0</span></p>
+
+<p>🍔 Junk Streak: <span id="junkStreak">0</span></p>
+
 </div>
 
 </section>
@@ -67,9 +95,50 @@ habits and suggest healthier choices.
 </section>
 
 
+<!-- FOOD SECTION -->
+
+<section class="food-section">
+
+<h2>Popular Foods</h2>
+
+<div class="restaurant-grid">
+
+<div class="restaurant-card">
+<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
+<h3>Pizza</h3>
+<button onclick="analyzeFood('pizza')">Analyze</button>
+</div>
+
+<div class="restaurant-card">
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+<h3>Burger</h3>
+<button onclick="analyzeFood('burger')">Analyze</button>
+</div>
+
+<div class="restaurant-card">
+<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
+<h3>Salad</h3>
+<button onclick="analyzeFood('salad')">Analyze</button>
+</div>
+
+<div class="restaurant-card">
+<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3">
+<h3>Idli</h3>
+<button onclick="analyzeFood('idli')">Analyze</button>
+</div>
+
+</div>
+
+</section>
+
+
 <footer>
+
 <p>© 2026 Food Impact Analyzer | Student Project</p>
+
 </footer>
+
+<script src="/js/script.js"></script>
 
 </body>
 
