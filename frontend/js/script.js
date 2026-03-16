@@ -1,4 +1,4 @@
-// LOGIN
+// ================= LOGIN =================
 
 document.getElementById("loginForm")?.addEventListener("submit", async function(e){
 
@@ -6,6 +6,8 @@ e.preventDefault()
 
 const email = document.getElementById("loginEmail").value
 const password = document.getElementById("loginPassword").value
+
+try{
 
 const response = await fetch("/login",{
 
@@ -29,15 +31,20 @@ if(data.message === "Login successful"){
 
 localStorage.setItem("loggedIn","true")
 
-window.location.href="/food_input_page"
+window.location.href="/restaurants.html"
+
+}
+
+}catch(error){
+
+alert("Login failed")
 
 }
 
 })
-//Welcome Message
-document.getElementById("userName").textContent =
-localStorage.getItem("userName") || "User"
-// REGISTER
+
+
+// ================= REGISTER =================
 
 document.getElementById("registerForm")?.addEventListener("submit", async function(e){
 
@@ -69,7 +76,9 @@ const data = await response.json()
 alert(data.message)
 
 if(data.message === "User registered successfully"){
-window.location.href="/login_page"
+
+window.location.href="/login.html"
+
 }
 
 }catch(error){
@@ -80,11 +89,139 @@ alert("Registration failed")
 
 })
 
-// -------- FOOD ANALYSIS --------
 
-function analyzeFood(food){
+// ================= RESTAURANT MENUS =================
 
-fetch("/analyze_food",{
+const restaurantMenus = {
+
+pizza_hut: [
+{food:"pizza",price:250,category:"junk"},
+{food:"veg pizza",price:220,category:"junk"}
+],
+
+burger_king: [
+{food:"burger",price:180,category:"junk"},
+{food:"cheese burger",price:200,category:"junk"}
+],
+
+green_bowl: [
+{food:"salad",price:150,category:"healthy"},
+{food:"protein bowl",price:180,category:"healthy"}
+],
+
+south_india: [
+{food:"idli",price:60,category:"healthy"},
+{food:"dosa",price:80,category:"healthy"}
+]
+
+}
+
+
+// ================= OPEN MENU =================
+
+function openMenu(name){
+
+localStorage.setItem("restaurant",name)
+
+window.location.href="/menu.html"
+
+}
+
+
+// ================= LOAD MENU =================
+
+if(document.getElementById("menuItems")){
+
+const restaurant = localStorage.getItem("restaurant")
+
+const menu = restaurantMenus[restaurant]
+
+const container = document.getElementById("menuItems")
+
+document.getElementById("restaurantName").textContent =
+restaurant.replace("_"," ").toUpperCase()
+
+menu.forEach(item=>{
+
+const card = document.createElement("div")
+
+card.className="restaurant-card"
+
+card.innerHTML = `
+
+<h3>${item.food}</h3>
+<p>₹${item.price}</p>
+
+<button onclick="addToCart('${item.food}',${item.price},'${item.category}')">
+Add to Cart
+</button>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+// ================= ADD TO CART =================
+
+function addToCart(food,price,category){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+cart.push({
+food:food,
+price:price,
+category:category
+})
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+alert("Added to cart")
+
+}
+
+
+// ================= SHOW CART =================
+
+if(document.getElementById("cartItems")){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+let list = document.getElementById("cartItems")
+
+let total = 0
+
+cart.forEach(item=>{
+
+let li = document.createElement("li")
+
+li.textContent = item.food + " - ₹" + item.price
+
+list.appendChild(li)
+
+total += item.price
+
+})
+
+document.getElementById("cartTotal").textContent = total
+
+}
+
+
+// ================= PLACE ORDER =================
+
+function placeOrder(){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+let orders = JSON.parse(localStorage.getItem("orders")) || []
+
+cart.forEach(item=>{
+
+fetch("/place_order",{
 
 method:"POST",
 headers:{
@@ -92,87 +229,34 @@ headers:{
 },
 
 body:JSON.stringify({
-food:food
+user_id:1,
+food_name:item.food,
+price:item.price,
+category:item.category
 })
 
 })
 
-.then(res=>res.json())
-.then(data=>{
-
-localStorage.setItem("foodResult",JSON.stringify(data))
-
-// UPDATE STREAK HERE
-updateStreak(data.category)
-
-window.location.href="/dashboard_page"
+orders.push(item.food)
 
 })
 
-}
-function updateStreak(category){
+localStorage.setItem("orders",JSON.stringify(orders))
 
-let healthy = parseInt(localStorage.getItem("healthyStreak")) || 0
-let junk = parseInt(localStorage.getItem("junkStreak")) || 0
+localStorage.removeItem("cart")
 
-if(category === "healthy"){
+alert("Order placed successfully")
 
-healthy++
-junk = 0
-
-}else{
-
-junk++
-healthy = 0
+window.location.href="/dashboard.html"
 
 }
 
-localStorage.setItem("healthyStreak",healthy)
-localStorage.setItem("junkStreak",junk)
 
-}
-// -------- DASHBOARD --------
+// ================= DASHBOARD =================
 
 window.onload=function(){
 
-if(window.location.pathname.includes("dashboard_page")){
-
-const result=JSON.parse(localStorage.getItem("foodResult"))
-
-if(result){
-
-document.getElementById("foodItem").textContent=result.food
-document.getElementById("calories").textContent=result.calories
-document.getElementById("category").textContent=result.category
-document.getElementById("healthScore").textContent=result.health_score
-
-}
-//Water Intake
-let glasses = Math.ceil(totalCalories / 300)
-
-document.getElementById("waterSuggestion").textContent =
-"Drink about " + glasses + " glasses today"
-
-let percent = Math.min((glasses / 8) * 100,100)
-
-document.getElementById("waterProgress").style.width =
-percent + "%"
-
-document.getElementById("healthyBar").style.width =
-(healthyCount * 20) + "%"
-
-document.getElementById("junkBar").style.width =
-(junkCount * 20) + "%"
-// SHOW STREAKS
-
-document.getElementById("healthyStreak").textContent =
-localStorage.getItem("healthyStreak") || 0
-
-document.getElementById("junkStreak").textContent =
-localStorage.getItem("junkStreak") || 0
-
-
-// ORDER HISTORY ANALYSIS
+if(window.location.pathname.includes("dashboard")){
 
 const orders = JSON.parse(localStorage.getItem("orders")) || []
 
@@ -207,15 +291,9 @@ healthyCount++
 
 })
 
-
-// TOTAL CALORIES
-
 if(document.getElementById("calorieTotal")){
 document.getElementById("calorieTotal").textContent = totalCalories
 }
-
-
-// WATER SUGGESTION
 
 if(document.getElementById("waterSuggestion")){
 
@@ -224,17 +302,6 @@ let glasses = Math.ceil(totalCalories / 300)
 document.getElementById("waterSuggestion").textContent =
 "Drink about " + glasses + " glasses of water today."
 
-}
-
-
-// WEEKLY REPORT
-
-if(document.getElementById("healthyDays")){
-document.getElementById("healthyDays").textContent = healthyCount
-}
-
-if(document.getElementById("junkDays")){
-document.getElementById("junkDays").textContent = junkCount
 }
 
 }

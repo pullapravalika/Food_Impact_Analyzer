@@ -1,25 +1,34 @@
--- Users table
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100)
+-- USERS TABLE
+
+CREATE TABLE IF NOT EXISTS users (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+email TEXT UNIQUE NOT NULL,
+password TEXT NOT NULL
 );
 
--- Food logs
-CREATE TABLE food_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    food_name VARCHAR(100),
-    calories INT,
-    category VARCHAR(50),
-    health_score INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+-- FOOD LOGS (ANALYSIS)
+
+CREATE TABLE IF NOT EXISTS food_logs (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user_id INTEGER,
+food_name TEXT,
+calories INTEGER,
+category TEXT,
+health_score INTEGER,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Streak tracker
-CREATE TABLE streak_tracker (
-    user_id INT PRIMARY KEY,
-    healthy_streak INT DEFAULT 0,
-    junk_streak INT DEFAULT 0
+
+-- ORDERS TABLE
+
+CREATE TABLE IF NOT EXISTS orders (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user_id INTEGER,
+food_name TEXT,
+price INTEGER,
+category TEXT,
+status TEXT,
+order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

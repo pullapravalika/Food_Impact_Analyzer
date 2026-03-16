@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>Cart</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
+<header class="topbar">
 <h1>Your Cart</h1>
+</header>
 
-<div id="cartItems"></div>
+<section class="cart-container">
 
-<h3>Total: ₹<span id="total"></span></h3>
+<ul id="cartItems"></ul>
 
-<a href="payment.html">Proceed to Payment</a>
+<h3>Total: ₹<span id="cartTotal"></span></h3>
 
-<script src="js/script.js"></script>
+<button onclick="placeOrder()">Place Order</button>
+
+</section>
+
+<script src="/js/script.js"></script>
 
 </body>
 </html>

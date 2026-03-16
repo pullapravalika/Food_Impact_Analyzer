@@ -2,47 +2,29 @@
 <html>
 
 <head>
-
-<title>Menu</title>
-
+<title>Restaurant Menu</title>
 <link rel="stylesheet" href="/css/style.css">
-
 </head>
 
 <body>
 
+<header class="topbar">
 <h1>Restaurant Menu</h1>
+<nav>
+<a href="/restaurants.html">Back</a>
+<a href="/cart.html">Cart</a>
+</nav>
+</header>
 
-<div class="menu-item">
+<section class="food-container">
 
-<h3>Pizza</h3>
-<p>₹200</p>
-<button onclick="addToCart('Pizza',200)">Add to Cart</button>
+<h2 id="restaurantName"></h2>
 
-</div>
+<div id="menuItems" class="restaurant-grid"></div>
 
-<div class="menu-item">
-
-<h3>Burger</h3>
-<p>₹150</p>
-<button onclick="addToCart('Burger',150)">Add to Cart</button>
-
-</div>
-
-<div class="menu-item">
-
-<h3>Salad</h3>
-<p>₹120</p>
-<button onclick="addToCart('Salad',120)">Add to Cart</button>
-
-</div>
-
-<br>
-
-<a href="/cart.html">Go to Cart</a>
+</section>
 
 <script src="/js/script.js"></script>
 
 </body>
-
 </html>

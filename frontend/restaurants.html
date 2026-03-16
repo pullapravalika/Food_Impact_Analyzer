@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Restaurants</title>
-<link rel="stylesheet" href="css/style.css">
+<title>Restaurants - Food Impact Analyzer</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
 <header class="topbar">
 <h1>Food Impact Analyzer</h1>
-
-<input type="text" id="search" placeholder="Search restaurants..." onkeyup="searchRestaurant()">
-
-<a href="cart.html">🛒 Cart</a>
-
+<nav>
+<a href="/dashboard.html">Dashboard</a>
+<a href="/">Logout</a>
+</nav>
 </header>
+
+<section class="food-container">
+
+<h2>Popular Restaurants</h2>
 
 <div class="restaurant-grid">
 
-<div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
-<h3>Pizza Hub</h3>
-<p>⭐ 4.4 • 25 mins</p>
-<button onclick="openMenu('pizza')">View Menu</button>
+<div class="restaurant-card" onclick="openMenu('pizza_hut')">
+<img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e">
+<h3>Pizza Hut</h3>
+<p>⭐ 4.2 • Italian</p>
 </div>
 
-<div class="restaurant-card">
+<div class="restaurant-card" onclick="openMenu('burger_king')">
 <img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
-<h3>Burger Point</h3>
-<p>⭐ 4.2 • 20 mins</p>
-<button onclick="openMenu('burger')">View Menu</button>
+<h3>Burger King</h3>
+<p>⭐ 4.1 • Fast Food</p>
 </div>
 
-<div class="restaurant-card">
-<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3">
-<h3>South Indian Tiffins</h3>
-<p>⭐ 4.6 • 15 mins</p>
-<button onclick="openMenu('idli')">View Menu</button>
+<div class="restaurant-card" onclick="openMenu('green_bowl')">
+<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
+<h3>Green Bowl</h3>
+<p>⭐ 4.7 • Healthy</p>
+</div>
+
+<div class="restaurant-card" onclick="openMenu('south_india')">
+<img src="https://images.unsplash.com/photo-1601050690597-df0568f70950">
+<h3>South Indian Meals</h3>
+<p>⭐ 4.6 • Traditional</p>
 </div>
 
 </div>
 
-<script src="js/script.js"></script>
+</section>
+
+<script src="/js/script.js"></script>
 
 </body>
 </html>
