@@ -99,6 +99,9 @@ def login():
         return jsonify({"message":"Login successful"})
     else:
         return jsonify({"message":"Invalid credentials"})
+@app.route("/recovery_page")
+def recovery_page():
+    return send_from_directory(FRONTEND_DIR, "recovery.html")
 
 
 # ---------------- FOOD ANALYSIS ----------------

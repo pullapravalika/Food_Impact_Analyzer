@@ -1,14 +1,3 @@
-<script>
-
-if(localStorage.getItem("loggedIn") !== "true"){
-
-alert("Please login first")
-
-window.location.href="/login_page"
-
-}
-
-</script>
 <!DOCTYPE html>
 <html>
 
@@ -22,85 +11,119 @@ window.location.href="/login_page"
 
 <body>
 
-<h1>Food Analysis Result</h1>
+<div class="dashboard-container">
 
-<div class="result-card">
+<div class="dashboard-header">
 
-<p><b>Food:</b> <span id="foodItem"></span></p>
+<h2>Food Impact Analyzer</h2>
 
-<p><b>Calories:</b> <span id="calories"></span></p>
+</div>
 
-<p><b>Category:</b> <span id="category"></span></p>
+<h3>Welcome Back, <span id="userName">User</span>!</h3>
 
-<p><b>Health Score:</b> <span id="healthScore"></span></p>
+<h4>Your Health Overview</h4>
+
+
+<div class="card">
+
+<h4>Today's Summary</h4>
+
+<div class="summary-grid">
+
+<div class="circle-progress">
+
+<div class="circle">
+
+<span id="calorieTotal">0</span>
+
+<p>Calories</p>
+
+</div>
+
+</div>
+
+<div class="health-score">
+
+<h3>Health Score</h3>
+
+<h1 id="healthScore">0</h1>
+
+<span class="score-label">Good</span>
+
+</div>
+
+</div>
 
 </div>
 
 
-<h2>Your Streak</h2>
+<div class="card">
 
-<p>Healthy Streak: <span id="healthyStreak"></span></p>
+<div class="streak-grid">
 
-<p>Junk Streak: <span id="junkStreak"></span></p>
+<div class="streak-box junk">
 
+<h4>🍔 Junk Food</h4>
 
-<h2>Healthy Suggestions</h2>
+<p id="junkCount">0</p>
 
-<div id="suggestions"></div>
+</div>
 
+<div class="streak-box healthy">
 
-<br>
+<h4>✔ Healthy Streak</h4>
 
-<a href="/food_input_page">Analyze Another Food</a>
+<p id="healthyStreak">0 Days</p>
 
-<script src="/js/script.js"></script>
+</div>
 
-</body>
+<div class="streak-box danger">
 
-</html>
-<!DOCTYPE html>
-<html>
+<h4>⚠ Junk Streak</h4>
 
-<head>
+<p id="junkStreak">0 Days</p>
 
-<title>Dashboard</title>
+</div>
 
-<link rel="stylesheet" href="/css/style.css">
-
-</head>
-
-<body>
-
-<h1>Food Analysis Result</h1>
-
-<div class="result-card">
-
-<p><b>Food:</b> <span id="foodItem"></span></p>
-
-<p><b>Calories:</b> <span id="calories"></span></p>
-
-<p><b>Category:</b> <span id="category"></span></p>
-
-<p><b>Health Score:</b> <span id="healthScore"></span></p>
+</div>
 
 </div>
 
 
-<h2>Your Streak</h2>
+<div class="card">
 
-<p>Healthy Streak: <span id="healthyStreak"></span></p>
+<h4>💧 Water Intake</h4>
 
-<p>Junk Streak: <span id="junkStreak"></span></p>
+<div class="water-bar">
+
+<div id="waterProgress"></div>
+
+</div>
+
+<p id="waterSuggestion"></p>
+
+</div>
 
 
-<h2>Healthy Suggestions</h2>
+<div class="card">
 
-<div id="suggestions"></div>
+<h4>This Week's Report</h4>
 
+<div class="weekly-bars">
 
-<br>
+<div class="bar green" id="healthyBar"></div>
 
-<a href="/food_input_page">Analyze Another Food</a>
+<div class="bar red" id="junkBar"></div>
+
+</div>
+
+<p>Healthy Days: <span id="healthyDays">0</span></p>
+
+<p>Junk Days: <span id="junkDays">0</span></p>
+
+</div>
+
+</div>
 
 <script src="/js/script.js"></script>
 

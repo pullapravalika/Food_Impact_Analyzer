@@ -34,6 +34,9 @@ window.location.href="/food_input_page"
 }
 
 })
+//Welcome Message
+document.getElementById("userName").textContent =
+localStorage.getItem("userName") || "User"
 // REGISTER
 
 document.getElementById("registerForm")?.addEventListener("submit", async function(e){
@@ -76,6 +79,7 @@ alert("Registration failed")
 }
 
 })
+
 // -------- FOOD ANALYSIS --------
 
 function analyzeFood(food){
@@ -98,31 +102,12 @@ food:food
 
 localStorage.setItem("foodResult",JSON.stringify(data))
 
+// UPDATE STREAK HERE
+updateStreak(data.category)
+
 window.location.href="/dashboard_page"
 
 })
-
-}
-
-
-// -------- DASHBOARD --------
-
-window.onload=function(){
-
-if(window.location.pathname.includes("dashboard_page")){
-
-const result=JSON.parse(localStorage.getItem("foodResult"))
-
-if(result){
-
-document.getElementById("foodItem").textContent=result.food
-document.getElementById("calories").textContent=result.calories
-document.getElementById("category").textContent=result.category
-document.getElementById("healthScore").textContent=result.health_score
-
-}
-
-}
 
 }
 function updateStreak(category){
@@ -146,21 +131,112 @@ localStorage.setItem("healthyStreak",healthy)
 localStorage.setItem("junkStreak",junk)
 
 }
-if(document.getElementById("healthyStreak")){
+// -------- DASHBOARD --------
 
-document.getElementById("healthyStreak").textContent =
-localStorage.getItem("healthyStreak") || 0
+window.onload=function(){
 
-document.getElementById("junkStreak").textContent =
-localStorage.getItem("junkStreak") || 0
+if(window.location.pathname.includes("dashboard_page")){
+
+const result=JSON.parse(localStorage.getItem("foodResult"))
+
+if(result){
+
+document.getElementById("foodItem").textContent=result.food
+document.getElementById("calories").textContent=result.calories
+document.getElementById("category").textContent=result.category
+document.getElementById("healthScore").textContent=result.health_score
 
 }
-if(document.getElementById("healthyStreak")){
+//Water Intake
+let glasses = Math.ceil(totalCalories / 300)
+
+document.getElementById("waterSuggestion").textContent =
+"Drink about " + glasses + " glasses today"
+
+let percent = Math.min((glasses / 8) * 100,100)
+
+document.getElementById("waterProgress").style.width =
+percent + "%"
+
+document.getElementById("healthyBar").style.width =
+(healthyCount * 20) + "%"
+
+document.getElementById("junkBar").style.width =
+(junkCount * 20) + "%"
+// SHOW STREAKS
 
 document.getElementById("healthyStreak").textContent =
 localStorage.getItem("healthyStreak") || 0
 
 document.getElementById("junkStreak").textContent =
 localStorage.getItem("junkStreak") || 0
+
+
+// ORDER HISTORY ANALYSIS
+
+const orders = JSON.parse(localStorage.getItem("orders")) || []
+
+const foodData = {
+
+pizza:{calories:285,type:"junk"},
+burger:{calories:350,type:"junk"},
+salad:{calories:120,type:"healthy"},
+idli:{calories:70,type:"healthy"}
+
+}
+
+let totalCalories = 0
+let junkCount = 0
+let healthyCount = 0
+
+orders.forEach(food=>{
+
+let data = foodData[food]
+
+if(data){
+
+totalCalories += data.calories
+
+if(data.type==="junk"){
+junkCount++
+}else{
+healthyCount++
+}
+
+}
+
+})
+
+
+// TOTAL CALORIES
+
+if(document.getElementById("calorieTotal")){
+document.getElementById("calorieTotal").textContent = totalCalories
+}
+
+
+// WATER SUGGESTION
+
+if(document.getElementById("waterSuggestion")){
+
+let glasses = Math.ceil(totalCalories / 300)
+
+document.getElementById("waterSuggestion").textContent =
+"Drink about " + glasses + " glasses of water today."
+
+}
+
+
+// WEEKLY REPORT
+
+if(document.getElementById("healthyDays")){
+document.getElementById("healthyDays").textContent = healthyCount
+}
+
+if(document.getElementById("junkDays")){
+document.getElementById("junkDays").textContent = junkCount
+}
+
+}
 
 }
