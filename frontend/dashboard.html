@@ -4,126 +4,79 @@
 <head>
 
 <title>Dashboard</title>
-
 <link rel="stylesheet" href="/css/style.css">
 
 </head>
 
 <body>
 
-<div class="dashboard-container">
+<header class="topbar">
 
-<div class="dashboard-header">
+<h1>Food Impact Analyzer</h1>
 
-<h2>Food Impact Analyzer</h2>
+<nav>
+<a href="/restaurants.html">Order Food</a>
+<a href="/">Logout</a>
+</nav>
 
-</div>
-
-<h3>Welcome Back, <span id="userName">User</span>!</h3>
-
-<h4>Your Health Overview</h4>
+</header>
 
 
-<div class="card">
+<section class="dashboard">
 
-<h4>Today's Summary</h4>
+<h2>Today's Summary</h2>
 
-<div class="summary-grid">
+<div class="dashboard-grid">
 
-<div class="circle-progress">
+<div class="dashboard-card">
 
-<div class="circle">
+<h3>Total Calories</h3>
 
-<span id="calorieTotal">0</span>
-
-<p>Calories</p>
-
-</div>
-
-</div>
-
-<div class="health-score">
-
-<h3>Health Score</h3>
-
-<h1 id="healthScore">0</h1>
-
-<span class="score-label">Good</span>
-
-</div>
-
-</div>
+<p id="calorieTotal">0</p>
 
 </div>
 
 
-<div class="card">
+<div class="dashboard-card">
 
-<div class="streak-grid">
+<h3>Healthy Streak</h3>
 
-<div class="streak-box junk">
-
-<h4>🍔 Junk Food</h4>
-
-<p id="junkCount">0</p>
+<p id="healthyStreak">0</p>
 
 </div>
 
-<div class="streak-box healthy">
 
-<h4>✔ Healthy Streak</h4>
+<div class="dashboard-card">
 
-<p id="healthyStreak">0 Days</p>
+<h3>Junk Streak</h3>
 
-</div>
-
-<div class="streak-box danger">
-
-<h4>⚠ Junk Streak</h4>
-
-<p id="junkStreak">0 Days</p>
-
-</div>
+<p id="junkStreak">0</p>
 
 </div>
 
 </div>
 
 
-<div class="card">
 
-<h4>💧 Water Intake</h4>
-
-<div class="water-bar">
-
-<div id="waterProgress"></div>
-
-</div>
+<h2>Water Intake Suggestion</h2>
 
 <p id="waterSuggestion"></p>
 
-</div>
 
 
-<div class="card">
+<h2>Weekly Food Report</h2>
 
-<h4>This Week's Report</h4>
+<p>Healthy Foods: <span id="healthyDays"></span></p>
+<p>Junk Foods: <span id="junkDays"></span></p>
 
-<div class="weekly-bars">
 
-<div class="bar green" id="healthyBar"></div>
 
-<div class="bar red" id="junkBar"></div>
+<h2>Order History</h2>
 
-</div>
+<ul id="orderHistory"></ul>
 
-<p>Healthy Days: <span id="healthyDays">0</span></p>
+</section>
 
-<p>Junk Days: <span id="junkDays">0</span></p>
-
-</div>
-
-</div>
 
 <script src="/js/script.js"></script>
 

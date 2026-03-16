@@ -1,30 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Restaurant Menu</title>
+
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
+
 
 <body>
 
 <header class="topbar">
-<h1>Restaurant Menu</h1>
+
+<h1>Food Impact Analyzer</h1>
+
 <nav>
-<a href="/restaurants.html">Back</a>
+
+<a href="/restaurants.html">Restaurants</a>
+
 <a href="/cart.html">Cart</a>
+
+<a href="/dashboard.html">Dashboard</a>
+
 </nav>
+
 </header>
+
+
 
 <section class="food-container">
 
 <h2 id="restaurantName"></h2>
 
+
+<!-- SEARCH BAR -->
+
+<div class="search-bar">
+
+<input 
+type="text"
+id="foodSearch"
+placeholder="Search food..."
+onkeyup="searchFood()"
+/>
+
+</div>
+
+
+
+<!-- MENU ITEMS -->
+
 <div id="menuItems" class="restaurant-grid"></div>
 
 </section>
 
+
+
+<footer>
+
+<p>© 2026 Food Impact Analyzer</p>
+
+</footer>
+
+
+
 <script src="/js/script.js"></script>
 
 </body>
+
 </html>
