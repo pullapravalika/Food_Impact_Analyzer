@@ -385,15 +385,15 @@ document.getElementById("calorieTotal").textContent = totalCalories
 
 // WATER INTAKE
 
-if(document.getElementById("waterSuggestion")){
-
 let glasses = Math.ceil(totalCalories / 300)
 
 document.getElementById("waterSuggestion").textContent =
-"Drink about " + glasses + " glasses of water today."
+glasses + " glasses recommended"
 
-}
+let percent = Math.min((glasses / 8) * 100,100)
 
+document.getElementById("waterProgress").style.width =
+percent + "%"
 
 
 // STREAKS
@@ -469,3 +469,39 @@ card.style.display = "none"
 })
 
 }
+document.getElementById("healthyBar").style.width =
+(healthyCount * 20) + "%"
+
+document.getElementById("junkBar").style.width =
+(junkCount * 20) + "%"
+//Recovery//
+document.getElementById("resetForm")?.addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const email = document.getElementById("resetEmail").value
+const password = document.getElementById("newPassword").value
+
+const response = await fetch("/reset_password",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email:email,
+password:password
+})
+
+})
+
+const data = await response.json()
+
+alert(data.message)
+
+if(data.message === "Password updated successfully"){
+window.location.href="/login_page"
+}
+
+})

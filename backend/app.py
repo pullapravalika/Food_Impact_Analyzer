@@ -39,6 +39,10 @@ def home():
 def login_page():
     return send_from_directory(FRONTEND_DIR, "login.html")
 
+@app.route("/forgot_password_page")
+def forgot_password_page():
+    return send_from_directory(FRONTEND_DIR, "recovery.html")
+
 
 @app.route("/register_page")
 @app.route("/register.html")
@@ -133,6 +137,8 @@ def register():
         conn.close()
 
 
+\
+
 # =============================
 # LOGIN API
 # =============================
@@ -141,29 +147,63 @@ def register():
 def login():
 
     data = request.json
-    email = data["email"]
-    password = data["password"]
-
+    email = data.get("email")
+    password = data.get("password")
+    print("LOGIN TRY:", email, password)   # DEBUG LINE
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE email=? AND password=?",
+        "SELECT id,name,email FROM users WHERE email=? AND password=?",
         (email, password)
     )
 
     user = cursor.fetchone()
-
+    print("DB RESULT:", user)  # DEBUG LINE
     cursor.close()
     conn.close()
 
     if user:
         return jsonify({
             "message": "Login successful",
-            "name": user[1]
+            "user_id": user[0],
+            "name": user[1],
+            "email": user[2]
         })
 
     return jsonify({"message": "Invalid credentials"})
+
+
+# =============================
+# RESET PASSWORD API
+# =============================
+
+@app.route("/reset_password", methods=["POST"])
+def reset_password():
+
+    data = request.json
+    email = data.get("email")
+    new_password = data.get("password")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE users SET password=? WHERE email=?",
+        (new_password, email)
+    )
+
+    conn.commit()
+
+    if cursor.rowcount > 0:
+        message = "Password updated successfully"
+    else:
+        message = "Email not found"
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": message})
 
 
 # =============================

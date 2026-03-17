@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Password Recovery - Food Impact Analyzer</title>
+<title>Reset Password - Food Impact Analyzer</title>
 
 <link rel="stylesheet" href="/css/style.css">
 
@@ -11,43 +13,42 @@
 
 <body>
 
-<header class="topbar">
+<div class="login-page">
 
-<h1>Food Impact Analyzer</h1>
+<div class="login-card">
 
-<nav>
-<a href="/">Home</a>
-<a href="/login_page">Login</a>
-</nav>
+<h2 class="app-title">Food Impact Analyzer</h2>
 
-</header>
+<h3>Reset Your Password</h3>
 
+<form id="resetForm">
 
-<section class="login-container">
+<input 
+type="email" 
+id="resetEmail" 
+placeholder="Enter your email" 
+required>
 
-<h2>Recover Your Account</h2>
+<input 
+type="password" 
+id="newPassword" 
+placeholder="Enter new password" 
+required>
 
-<form>
-
-<div class="input-group">
-<label>Email</label>
-<input type="email" placeholder="Enter your registered email" required>
-</div>
-
-<button type="submit">Send Recovery Link</button>
+<button type="submit">Update Password</button>
 
 </form>
 
-<p>
-<a href="/login_page">Back to Login</a>
+<p class="extra-links">
+Remember your password? 
+<a href="/login_page">Login</a>
 </p>
 
-</section>
+</div>
 
+</div>
 
-<footer>
-<p>© 2026 Food Impact Analyzer</p>
-</footer>
+<script src="/js/script.js"></script>
 
 </body>
 

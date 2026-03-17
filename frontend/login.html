@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<h2 class="app-title">Food Impact Analyzer</h2>
 <title>Login - Food Impact Analyzer</title>
 <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -14,15 +15,19 @@
 
 <section class="login-container">
 
-<h2>User Login</h2>
+<div class="login-page">
+
+<div class="login-card">
+
+<h2 class="app-title">Food Impact Analyzer</h2>
+
+<h3>User Login</h3>
 
 <form id="loginForm">
 
-<label>Email</label>
-<input type="email" id="loginEmail" required>
+<input type="email" id="loginEmail" placeholder="Enter Email" required>
 
-<label>Password</label>
-<input type="password" id="loginPassword" required>
+<input type="password" id="loginPassword" placeholder="Enter Password" required>
 
 <button type="submit">Login</button>
 
@@ -30,9 +35,16 @@
 
 <p>
 Don't have an account?
-<a href="/register.html">Register</a>
+<a href="/register_page">Register</a>
 </p>
 
+<p>
+<a href="/forgot_password_page">Forgot Password?</a>
+</p>
+
+</div>
+
+</div>
 </section>
 
 <script src="/js/script.js"></script>
