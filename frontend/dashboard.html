@@ -1,85 +1,65 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <title>Dashboard</title>
 <link rel="stylesheet" href="/css/style.css">
-
 </head>
 
 <body>
 
 <header class="topbar">
-
 <h1>Food Impact Analyzer</h1>
-
-<nav>
-<a href="/restaurants.html">Order Food</a>
-<a href="/">Logout</a>
-</nav>
-
 </header>
-
 
 <section class="dashboard">
 
-<h2>Today's Summary</h2>
+<h2>Welcome Back 👋</h2>
 
-<div class="dashboard-grid">
+<div class="summary">
 
-<div class="dashboard-card">
-
-<h3>Total Calories</h3>
-
-<p id="calorieTotal">0</p>
-
+<div class="card">
+<h3>Calories</h3>
+<p id="calories"></p>
 </div>
 
-
-<div class="dashboard-card">
-
-<h3>Healthy Streak</h3>
-
-<p id="healthyStreak">0</p>
-
-</div>
-
-
-<div class="dashboard-card">
-
-<h3>Junk Streak</h3>
-
-<p id="junkStreak">0</p>
-
+<div class="card">
+<h3>Health Score</h3>
+<p id="healthScore"></p>
 </div>
 
 </div>
 
+<div class="circle-section">
 
+<div class="circle-card">
+<h4>Healthy Streak</h4>
+<div class="circle green" id="healthyCircle">0</div>
+</div>
 
-<h2>Water Intake Suggestion</h2>
+<div class="circle-card">
+<h4>Junk Streak</h4>
+<div class="circle red" id="junkCircle">0</div>
+</div>
 
-<p id="waterSuggestion"></p>
+</div>
 
+<div class="water">
 
+<h3>Water Suggestion 💧</h3>
+<div class="water-bar">
+<div id="waterFill"></div>
+</div>
 
-<h2>Weekly Food Report</h2>
+</div>
 
-<p>Healthy Foods: <span id="healthyDays"></span></p>
-<p>Junk Foods: <span id="junkDays"></span></p>
-
-
-
-<h2>Order History</h2>
-
-<ul id="orderHistory"></ul>
+<div class="suggestions">
+<h3>Suggestions</h3>
+<p id="suggestions"></p>
+</div>
 
 </section>
-
 
 <script src="/js/script.js"></script>
 
 </body>
-
 </html>

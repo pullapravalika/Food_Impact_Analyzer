@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Food Analyzer</title>
+<title>Food Impact Analyzer</title>
 
 <link rel="stylesheet" href="/css/style.css">
 
@@ -14,96 +14,104 @@
 
 <body>
 
+<!-- TOP BAR -->
 <header class="topbar">
 
 <h1>Food Impact Analyzer</h1>
 
 <nav>
 <a href="/dashboard_page">Dashboard</a>
+<a href="/account_page">Account</a>
+<a href="/support_page">Support</a>
 <a href="/login_page">Logout</a>
 </nav>
 
 </header>
 
 
+<!-- FOOD SECTION -->
 <section class="food-container">
 
-<h2>Choose Food to Analyze</h2>
+<h2>Popular Foods 🍔</h2>
 
 <div class="restaurant-grid">
 
-
+<!-- PIZZA -->
 <div class="restaurant-card">
 
-<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" alt="Pizza">
+<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
 
 <h3>Pizza</h3>
 
 <p>⭐ 4.3 • 25 mins</p>
-
 <p>Italian, Fast Food</p>
 
-<button onclick="analyzeFood('pizza')">Analyze</button>
+<p><b>₹200</b></p>
+
+<button onclick="analyzeFood('pizza')">Order Now</button>
 
 </div>
 
 
+<!-- BURGER -->
 <div class="restaurant-card">
 
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349" alt="Burger">
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
 
 <h3>Burger</h3>
 
 <p>⭐ 4.2 • 20 mins</p>
-
 <p>American, Fast Food</p>
 
-<button onclick="analyzeFood('burger')">Analyze</button>
+<p><b>₹150</b></p>
+
+<button onclick="analyzeFood('burger')">Order Now</button>
 
 </div>
 
 
+<!-- SALAD -->
 <div class="restaurant-card">
 
-<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Salad">
+<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
 
 <h3>Salad</h3>
 
 <p>⭐ 4.7 • 15 mins</p>
-
 <p>Healthy, Vegan</p>
 
-<button onclick="analyzeFood('salad')">Analyze</button>
+<p><b>₹120</b></p>
+
+<button onclick="analyzeFood('salad')">Order Now</button>
 
 </div>
 
 
+<!-- IDLI -->
 <div class="restaurant-card">
 
-<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3" alt="Idli">
+<img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3">
 
 <h3>Idli</h3>
 
 <p>⭐ 4.6 • 10 mins</p>
-
 <p>South Indian</p>
 
-<button onclick="analyzeFood('idli')">Analyze</button>
+<p><b>₹80</b></p>
+
+<button onclick="analyzeFood('idli')">Order Now</button>
 
 </div>
-
 
 </div>
 
 </section>
 
 
+<!-- FOOTER -->
 <footer>
-
 <p>© 2026 Food Impact Analyzer</p>
-
 </footer>
-
 
 <script src="/js/script.js"></script>
 
