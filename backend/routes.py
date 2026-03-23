@@ -16,7 +16,10 @@ def register_routes(app):
     def login():
         data = request.json
         return login_user(data)
-
+    
+    @app.route("/forgot_password_page")
+    def forgot_password_page():
+        return send_from_directory(FRONTEND_DIR, "recovery.html")
 
     @app.route("/analyze_food", methods=["POST"])
     def analyze():

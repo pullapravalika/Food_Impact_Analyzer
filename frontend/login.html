@@ -1,49 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<h2 class="app-title">Food Impact Analyzer</h2>
 <title>Login - Food Impact Analyzer</title>
-
 <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<!-- TOP BAR -->
-<header class="topbar">
+<header>
 <h1>Food Impact Analyzer</h1>
-
-<nav>
-<a href="/">Home</a>
-<a href="/register_page">Register</a>
-</nav>
 </header>
 
-
-<!-- LOGIN FORM -->
 <section class="login-container">
 
-<h2>User Login</h2>
+<div class="login-page">
+
+<div class="login-card">
+
+<h2 class="app-title">Food Impact Analyzer</h2>
+
+<h3>User Login</h3>
 
 <form id="loginForm">
 
-<div class="input-group">
-<label>Email</label>
-<input type="email" id="loginEmail" placeholder="Enter your email" required>
-</div>
+<input type="email" id="loginEmail" placeholder="Enter Email" required>
 
-<div class="input-group">
-<label>Password</label>
-<input type="password" id="loginPassword" placeholder="Enter your password" required>
-</div>
-
-<!-- FORGOT PASSWORD -->
-<p style="text-align:right;">
-<a href="/reset_page">Forgot Password?</a>
-</p>
+<input type="password" id="loginPassword" placeholder="Enter Password" required>
 
 <button type="submit">Login</button>
 
@@ -51,16 +35,17 @@
 
 <p>
 Don't have an account?
-<a href="/register_page">Register here</a>
+<a href="/register_page">Register</a>
 </p>
 
+<p>
+<a href="/forgot_password_page">Forgot Password?</a>
+</p>
+
+</div>
+
+</div>
 </section>
-
-
-<!-- FOOTER -->
-<footer>
-<p>© 2026 Food Impact Analyzer</p>
-</footer>
 
 <script src="/js/script.js"></script>
 
