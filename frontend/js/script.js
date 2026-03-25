@@ -32,43 +32,52 @@ alert("Registration failed")
 })
 
 
-// =======================
+// ==========================
 // LOGIN
-// =======================
+// ==========================
 
-document.getElementById("loginForm")?.addEventListener("submit", async function(e){
+document.getElementById("loginForm")?.addEventListener("submit", async function(e) {
 
-e.preventDefault()
+    e.preventDefault();
 
-const email = document.getElementById("loginEmail").value
-const password = document.getElementById("loginPassword").value
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
 
-try{
+    try {
+        const response = await fetch("http://127.0.0.1:5000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
 
-const res = await fetch("/login",{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({ email,password })
-})
+        const data = await response.json();
 
-const data = await res.json()
-alert(data.message)
+        // ✅ SUCCESS
+        if (data.message === "Login successful") {
 
-if(data.message === "Login successful"){
+            alert("Login Successful");
 
-localStorage.setItem("userEmail", email)
-localStorage.setItem("healthyStreak", 0)
-localStorage.setItem("junkStreak", 0)
+            // Save user info
+            localStorage.setItem("user_id", data.user_id);
+            localStorage.setItem("user_name", data.name);
 
-window.location.href = "/food_input_page"
+            // 🔥 REDIRECT TO RESTAURANTS PAGE
+            window.location.href = "http://127.0.0.1:5000/restaurants_page";
 
-}
+        } else {
+            alert(data.message);
+        }
 
-}catch(error){
-alert("Login failed")
-}
-
-})
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Login failed");
+    }
+});
 
 
 // =======================
@@ -124,6 +133,18 @@ showDashboard()
 
 }
 
+// ==========================
+// OPEN MENU FUNCTION
+// ==========================
+
+function openMenu(restaurantName) {
+
+    // Save selected restaurant
+    localStorage.setItem("restaurant", restaurantName);
+
+    // Redirect to menu page
+    window.location.href = "http://127.0.0.1:5000/menu_page";
+}
 
 // =======================
 // STREAK LOGIC

@@ -53,6 +53,10 @@ def account_page():
     return send_from_directory(FRONTEND_DIR, "account.html")
 
 
+@app.route("/restaurants_page")
+def restaurants_page():
+    return send_from_directory(FRONTEND_DIR, "restaurants.html")
+
 # FOOD INPUT
 @app.route("/food_input_page")
 @app.route("/food_input.html")

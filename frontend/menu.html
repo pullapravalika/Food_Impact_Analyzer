@@ -1,76 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Restaurant Menu</title>
-
+<title>Menu</title>
 <link rel="stylesheet" href="/css/style.css">
-
 </head>
-
 
 <body>
 
 <header class="topbar">
-
-<h1>Food Impact Analyzer</h1>
+<h1 id="restaurantTitle">Menu</h1>
 
 <nav>
-
-<a href="/restaurants.html">Restaurants</a>
-
-<a href="/cart.html">Cart</a>
-
-<a href="/dashboard.html">Dashboard</a>
-
+<a href="/restaurants_page">Restaurants</a>
+<a href="/cart_page">Cart</a>
+<a href="/dashboard_page">Dashboard</a>
 </nav>
-
 </header>
-
-
 
 <section class="food-container">
 
-<h2 id="restaurantName"></h2>
+<h2>Available Items</h2>
 
-
-<!-- SEARCH BAR -->
-
-<div class="search-bar">
-
-<input 
-type="text"
-id="foodSearch"
-placeholder="Search food..."
-onkeyup="searchFood()"
-/>
-
-</div>
-
-
-
-<!-- MENU ITEMS -->
-
-<div id="menuItems" class="restaurant-grid"></div>
+<div id="menuContainer" class="restaurant-grid"></div>
 
 </section>
 
+<script>
+
+// 🔥 GET SELECTED RESTAURANT
+const restaurant = localStorage.getItem("restaurant");
+
+// Show restaurant name
+document.getElementById("restaurantTitle").innerText = restaurant.toUpperCase() + " Menu";
 
 
-<footer>
+// 🔥 MENU DATA
+const menus = {
 
-<p>© 2026 Food Impact Analyzer</p>
+    "pizza_hut": [
+        {name: "Margherita Pizza", price: 200},
+        {name: "Veg Supreme", price: 300}
+    ],
 
-</footer>
+    "burger_king": [
+        {name: "Veg Burger", price: 120},
+        {name: "Chicken Burger", price: 180}
+    ],
+
+    "green_bowl": [
+        {name: "Salad Bowl", price: 150},
+        {name: "Healthy Wrap", price: 130}
+    ],
+
+    "south_india": [
+        {name: "Idli", price: 50},
+        {name: "Dosa", price: 80}
+    ]
+};
 
 
+// 🔥 LOAD MENU
+const menuItems = menus[restaurant];
+const container = document.getElementById("menuContainer");
 
-<script src="/js/script.js"></script>
+menuItems.forEach(item => {
+
+    container.innerHTML += `
+        <div class="restaurant-card">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+            <button onclick="addToCart('${item.name}', ${item.price})">
+                Add to Cart
+            </button>
+        </div>
+    `;
+});
+
+
+// 🔥 ADD TO CART FUNCTION
+function addToCart(name, price) {
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({name, price});
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert(name + " added to cart!");
+}
+
+</script>
 
 </body>
-
 </html>
