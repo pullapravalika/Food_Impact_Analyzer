@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Support</title>
-<link rel="stylesheet" href="/css/style.css">
+    <title>Support</title>
 </head>
-
 <body>
 
-<header class="topbar">
-<h1>Food Impact Analyzer</h1>
+<h2>Raise a Complaint</h2>
 
-<nav>
-<a href="/food_input_page">Home</a>
-<a href="/account_page">Account</a>
-</nav>
+<input type="email" id="email" placeholder="Enter your email"><br><br>
 
-</header>
+<select id="issue">
+    <option>Delivery Issue</option>
+    <option>Wrong Food</option>
+    <option>Late Delivery</option>
+</select><br><br>
 
-<section class="dashboard">
+<textarea id="description" placeholder="Describe your issue"></textarea><br><br>
 
-<h2>Raise a Complaint 📩</h2>
+<button onclick="submitComplaint()">Submit Complaint</button>
 
-<form id="supportForm">
+<script>
+function submitComplaint() {
+    const email = document.getElementById("email").value;
+    const issue = document.getElementById("issue").value;
+    const description = document.getElementById("description").value;
 
-<input type="text" id="issueType" placeholder="Issue (e.g. Late Delivery)" required>
-
-<textarea id="description" placeholder="Describe your issue"></textarea>
-
-<button type="submit">Submit</button>
-
-</form>
-
-</section>
-
-<script src="/js/script.js"></script>
+    fetch("http://127.0.0.1:5000/submit_complaint", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: email,
+            issue: issue,
+            description: description
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(err => {
+        alert("Error submitting complaint");
+        console.error(err);
+    });
+}
+</script>
 
 </body>
 </html>

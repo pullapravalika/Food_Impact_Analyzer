@@ -1,51 +1,6 @@
-// ================= LOGIN =================
-
-document.getElementById("loginForm")?.addEventListener("submit", async function(e){
-
-e.preventDefault()
-
-const email = document.getElementById("loginEmail").value
-const password = document.getElementById("loginPassword").value
-
-try{
-
-const response = await fetch("/login",{
-
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email:email,
-password:password
-})
-
-})
-
-const data = await response.json()
-
-alert(data.message)
-
-if(data.message === "Login successful"){
-
-localStorage.setItem("loggedIn","true")
-
-window.location.href="/restaurants.html"
-
-}
-
-}catch(error){
-
-alert("Login failed")
-
-}
-
-})
-
-
-
-// ================= REGISTER =================
+// =======================
+// REGISTER
+// =======================
 
 document.getElementById("registerForm")?.addEventListener("submit", async function(e){
 
@@ -57,424 +12,176 @@ const password = document.getElementById("password").value
 
 try{
 
-const response = await fetch("/register",{
-
+const res = await fetch("/register",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-name:name,
-email:email,
-password:password
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ name,email,password })
 })
 
-})
-
-const data = await response.json()
-
+const data = await res.json()
 alert(data.message)
 
 if(data.message === "User registered successfully"){
+window.location.href = "/login_page"
+}
 
-window.location.href="/login.html"
+}catch(error){
+alert("Registration failed")
+}
+
+})
+
+
+// =======================
+// LOGIN
+// =======================
+
+document.getElementById("loginForm")?.addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const email = document.getElementById("loginEmail").value
+const password = document.getElementById("loginPassword").value
+
+try{
+
+const res = await fetch("/login",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ email,password })
+})
+
+const data = await res.json()
+alert(data.message)
+
+if(data.message === "Login successful"){
+
+localStorage.setItem("userEmail", email)
+localStorage.setItem("healthyStreak", 0)
+localStorage.setItem("junkStreak", 0)
+
+window.location.href = "/food_input_page"
 
 }
 
 }catch(error){
-
-alert("Registration failed")
-
+alert("Login failed")
 }
 
 })
 
 
+// =======================
+// FOOD ORDER / ANALYSIS
+// =======================
 
-const restaurantMenus = {
+function analyzeFood(food){
 
-pizza_hut:[
-{
-food:"pizza",
-price:250,
-category:"junk",
-image:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38"
-},
+const email = localStorage.getItem("userEmail") || "guest"
 
-{
-food:"veg pizza",
-price:220,
-category:"junk",
-image:"https://images.unsplash.com/photo-1601924638867-3ec2f90b7c15"
-}
-],
-
-burger_king:[
-{
-food:"burger",
-price:180,
-category:"junk",
-image:"https://images.unsplash.com/photo-1550547660-d9450f859349"
-},
-
-{
-food:"cheese burger",
-price:200,
-category:"junk",
-image:"https://images.unsplash.com/photo-1550317138-10000687a72b"
-}
-],
-
-green_bowl:[
-{
-food:"salad",
-price:150,
-category:"healthy",
-image:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
-},
-
-{
-food:"protein bowl",
-price:180,
-category:"healthy",
-image:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
-}
-],
-
-south_india:[
-{
-food:"idli",
-price:60,
-category:"healthy",
-image:"https://images.unsplash.com/photo-1589308078059-be1415eab4c3"
-},
-
-{
-food:"dosa",
-price:80,
-category:"healthy",
-image:"https://images.unsplash.com/photo-1631515242808-497c3fbd3972"
-}
-]
-
-}
-
-
-
-// ================= OPEN RESTAURANT =================
-
-function openMenu(name){
-
-localStorage.setItem("restaurant",name)
-
-window.location.href="/menu.html"
-
-}
-
-
-
-// ================= LOAD MENU =================
-
-if(document.getElementById("menuItems")){
-
-const restaurant = localStorage.getItem("restaurant")
-
-const menu = restaurantMenus[restaurant]
-
-const container = document.getElementById("menuItems")
-
-document.getElementById("restaurantName").textContent =
-restaurant.replace("_"," ").toUpperCase()
-
-menu.forEach(item=>{
-
-const card = document.createElement("div")
-
-card.className="restaurant-card"
-
-card.innerHTML = `
-
-<img src="${item.image}" class="food-img">
-
-<h3>${item.food}</h3>
-
-<p class="price">₹${item.price}</p>
-
-<button onclick="addToCart('${item.food}',${item.price},'${item.category}')">
-Add to Cart
-</button>
-
-`
-
-container.appendChild(card)
-
-})
-
-}
-
-
-
-// ================= ADD TO CART =================
-
-function addToCart(food,price,category){
-
-let cart = JSON.parse(localStorage.getItem("cart")) || []
-
-cart.push({
-food:food,
-price:price,
-category:category
-})
-
-localStorage.setItem("cart",JSON.stringify(cart))
-
-alert("Added to cart")
-
-}
-
-
-
-// ================= SHOW CART =================
-
-if(document.getElementById("cartItems")){
-
-let cart = JSON.parse(localStorage.getItem("cart")) || []
-
-let list = document.getElementById("cartItems")
-
-let total = 0
-
-list.innerHTML = ""
-
-cart.forEach((item,index)=>{
-
-let li = document.createElement("li")
-
-li.innerHTML = `
-${item.food} - ₹${item.price}
-<button onclick="removeItem(${index})">❌</button>
-`
-
-list.appendChild(li)
-
-total += item.price
-
-})
-
-document.getElementById("cartTotal").textContent = total
-
-}
-
-
-
-// ================= REMOVE CART ITEM =================
-
-function removeItem(index){
-
-let cart = JSON.parse(localStorage.getItem("cart")) || []
-
-cart.splice(index,1)
-
-localStorage.setItem("cart",JSON.stringify(cart))
-
-location.reload()
-
-}
-
-
-
-// ================= PLACE ORDER =================
-
-function placeOrder(){
-
-let cart = JSON.parse(localStorage.getItem("cart")) || []
-
-if(cart.length === 0){
-
-alert("Your cart is empty!")
-
-return
-
-}
-
-let orders = JSON.parse(localStorage.getItem("orders")) || []
-
-cart.forEach(item=>{
-
-fetch("/place_order",{
-
+fetch("/analyze_food",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-user_id:1,
-food_name:item.food,
-price:item.price,
-category:item.category
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ food,email })
 })
+.then(res => res.json())
+.then(data => {
 
-})
+localStorage.setItem("foodResult", JSON.stringify(data))
 
-orders.push(item.food)
+window.location.href = "/dashboard_page"
 
 })
-
-localStorage.setItem("orders",JSON.stringify(orders))
-
-localStorage.removeItem("cart")
-
-alert("Order placed successfully!")
-
-window.location.href="/dashboard.html"
 
 }
 
 
+// =======================
+// DASHBOARD LOAD
+// =======================
 
-// ================= DASHBOARD =================
+window.onload = function(){
 
-window.onload=function(){
+if(window.location.pathname.includes("dashboard_page")){
 
-if(window.location.pathname.includes("dashboard")){
+const result = JSON.parse(localStorage.getItem("foodResult"))
 
-const orders = JSON.parse(localStorage.getItem("orders")) || []
+if(result){
 
-const foodData = {
+// Show values
+document.getElementById("calories").textContent = result.calories
+document.getElementById("healthScore").textContent = result.health_score
 
-pizza:{calories:285,type:"junk"},
-burger:{calories:350,type:"junk"},
-salad:{calories:120,type:"healthy"},
-idli:{calories:70,type:"healthy"}
+// Update streak
+updateStreak(result.category)
+
+// Show UI
+showDashboard()
 
 }
 
-let totalCalories = 0
-let junkCount = 0
-let healthyCount = 0
+}
 
-orders.forEach(food=>{
+}
 
-let data = foodData[food]
 
-if(data){
+// =======================
+// STREAK LOGIC
+// =======================
 
-totalCalories += data.calories
+function updateStreak(category){
 
-if(data.type==="junk"){
-junkCount++
+let healthy = parseInt(localStorage.getItem("healthyStreak")) || 0
+let junk = parseInt(localStorage.getItem("junkStreak")) || 0
+
+if(category === "healthy"){
+healthy++
+junk = 0
 }else{
-healthyCount++
+junk++
+healthy = 0
 }
 
-}
+localStorage.setItem("healthyStreak", healthy)
+localStorage.setItem("junkStreak", junk)
 
-})
-
-
-
-// TOTAL CALORIES
-
-if(document.getElementById("calorieTotal")){
-document.getElementById("calorieTotal").textContent = totalCalories
 }
 
 
+// =======================
+// DASHBOARD DISPLAY
+// =======================
 
-// WATER INTAKE
+function showDashboard(){
 
-let glasses = Math.ceil(totalCalories / 300)
+let healthy = parseInt(localStorage.getItem("healthyStreak")) || 0
+let junk = parseInt(localStorage.getItem("junkStreak")) || 0
 
-document.getElementById("waterSuggestion").textContent =
-glasses + " glasses recommended"
+// Circles
+document.getElementById("healthyCircle").textContent = healthy
+document.getElementById("junkCircle").textContent = junk
 
-let percent = Math.min((glasses / 8) * 100,100)
+// Water suggestion (based on healthy streak)
+let water = healthy * 20
+if(water > 100) water = 100
 
-document.getElementById("waterProgress").style.width =
-percent + "%"
+document.getElementById("waterFill").style.width = water + "%"
 
-
-// STREAKS
-
-if(document.getElementById("healthyStreak")){
-document.getElementById("healthyStreak").textContent =
-localStorage.getItem("healthyStreak") || 0
-}
-
-if(document.getElementById("junkStreak")){
-document.getElementById("junkStreak").textContent =
-localStorage.getItem("junkStreak") || 0
-}
-
-
-
-// WEEKLY REPORT
-
-if(document.getElementById("healthyDays")){
-document.getElementById("healthyDays").textContent = healthyCount
-}
-
-if(document.getElementById("junkDays")){
-document.getElementById("junkDays").textContent = junkCount
-}
-
-
-
-// ORDER HISTORY
-
-if(document.getElementById("orderHistory")){
-
-const list = document.getElementById("orderHistory")
-
-orders.forEach(food=>{
-
-let li = document.createElement("li")
-
-li.textContent = food
-
-list.appendChild(li)
-
-})
-
-}
-
-}
-
-}
-
-// ================= FOOD SEARCH =================
-
-function searchFood(){
-
-let input = document.getElementById("foodSearch").value.toLowerCase()
-
-let cards = document.querySelectorAll(".restaurant-card")
-
-cards.forEach(card => {
-
-let foodName = card.querySelector("h3").textContent.toLowerCase()
-
-if(foodName.includes(input)){
-
-card.style.display = "block"
-
+// Suggestions
+if(junk > 0){
+document.getElementById("suggestions").innerText =
+"⚠ Reduce junk food. Try Salad 🥗 or Idli 🥘"
 }else{
-
-card.style.display = "none"
+document.getElementById("suggestions").innerText =
+"✅ Excellent healthy eating! Keep it up 💪"
+}
 
 }
 
-})
+// =======================
+// RESET PASSWORD
+// =======================
 
-}
-document.getElementById("healthyBar").style.width =
-(healthyCount * 20) + "%"
-
-document.getElementById("junkBar").style.width =
-(junkCount * 20) + "%"
-//Recovery//
 document.getElementById("resetForm")?.addEventListener("submit", async function(e){
 
 e.preventDefault()
@@ -482,26 +189,125 @@ e.preventDefault()
 const email = document.getElementById("resetEmail").value
 const password = document.getElementById("newPassword").value
 
-const response = await fetch("/reset_password",{
-
+const res = await fetch("/reset_password",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email:email,
-password:password
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ email,password })
 })
 
-})
-
-const data = await response.json()
+const data = await res.json()
 
 alert(data.message)
 
-if(data.message === "Password updated successfully"){
-window.location.href="/login_page"
-}
+window.location.href = "/login_page"
 
 })
+
+// =======================
+// ACCOUNT PAGE
+// =======================
+
+if(window.location.pathname.includes("account_page")){
+
+const email = localStorage.getItem("userEmail")
+
+document.getElementById("userEmail").textContent = email
+
+fetch("/get_orders/" + email)
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("totalOrders").textContent = data.length
+
+const list = document.getElementById("orderList")
+
+data.forEach(order => {
+
+const div = document.createElement("div")
+
+div.className = "menu-item"
+
+div.innerHTML = `
+<p><b>Food:</b> ${order[0]}</p>
+<p><b>Price:</b> ₹${order[1]}</p>
+<p><b>Category:</b> ${order[2]}</p>
+<p><b>Time:</b> ${order[3]}</p>
+<hr>
+`
+
+list.appendChild(div)
+
+})
+
+})
+
+}
+
+// =======================
+// SUPPORT SYSTEM
+// =======================
+
+document.getElementById("supportForm")?.addEventListener("submit", async function(e){
+
+e.preventDefault()
+
+const email = localStorage.getItem("userEmail")
+const issue = document.getElementById("issueType").value
+const description = document.getElementById("description").value
+
+const res = await fetch("/submit_issue",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ email, issue, description })
+})
+
+const data = await res.json()
+
+alert(data.message)
+
+})
+
+// =======================
+// ADMIN PANEL
+// =======================
+
+if(window.location.pathname.includes("admin_page")){
+
+fetch("/get_issues")
+.then(res => res.json())
+.then(data => {
+
+const list = document.getElementById("issuesList")
+
+data.forEach(issue => {
+
+const div = document.createElement("div")
+
+div.className = "menu-item"
+
+div.innerHTML = `
+<p><b>User:</b> ${issue[1]}</p>
+<p><b>Issue:</b> ${issue[2]}</p>
+<p><b>Description:</b> ${issue[3]}</p>
+<p><b>Status:</b> ${issue[4]}</p>
+
+<button onclick="resolveIssue(${issue[0]})">Resolve</button>
+<hr>
+`
+
+list.appendChild(div)
+
+})
+
+})
+
+}
+
+function resolveIssue(id){
+
+fetch("/resolve_issue/" + id,{
+method:"POST"
+})
+.then(()=>location.reload())
+
+}

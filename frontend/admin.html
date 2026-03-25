@@ -1,25 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Panel</title>
-<link rel="stylesheet" href="/css/style.css">
+    <title>Admin Dashboard</title>
 </head>
-
 <body>
 
-<header class="topbar">
-<h1>Admin Panel 👨‍💼</h1>
-</header>
+<h2>Admin - Complaints</h2>
 
-<section class="dashboard">
+<div id="complaints"></div>
 
-<h2>All Complaints</h2>
+<script>
 
-<div id="issuesList"></div>
+function loadComplaints() {
+    fetch("http://127.0.0.1:5000/get_complaints")
+    .then(res => res.json())
+    .then(data => {
 
-</section>
+        let html = "";
 
-<script src="/js/script.js"></script>
+        data.forEach(c => {
+            html += `
+                <div style="border:1px solid black; padding:10px; margin:10px;">
+                    <p><b>Email:</b> ${c.email}</p>
+                    <p><b>Issue:</b> ${c.issue}</p>
+                    <p><b>Description:</b> ${c.description}</p>
+                    <p><b>Status:</b> ${c.status}</p>
+
+                    <input id="reply_${c.id}" placeholder="Reply here">
+                    <button onclick="reply(${c.id})">Reply</button>
+                </div>
+            `;
+        });
+
+        document.getElementById("complaints").innerHTML = html;
+    });
+}
+
+function reply(id) {
+    const replyText = document.getElementById(`reply_${id}`).value;
+
+    fetch("http://127.0.0.1:5000/update_complaint", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: id,
+            status: "Resolved",
+            reply: replyText
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        loadComplaints();
+    });
+}
+
+loadComplaints();
+
+</script>
 
 </body>
 </html>

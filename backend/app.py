@@ -1,15 +1,14 @@
 import sys
 import os
+import sqlite3
 
-# ADD PROJECT ROOT TO PYTHON PATH
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from database.db_connection import get_connection
 from backend.order_api import order_bp
-
 
 # =============================
 # APP SETUP
@@ -21,69 +20,90 @@ FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 app = Flask(__name__)
 CORS(app)
 
-# Register order blueprint
 app.register_blueprint(order_bp)
 
-
 # =============================
-# PAGE ROUTES
+# PAGE ROUTES (ALL FIXED ✅)
 # =============================
 
 @app.route("/")
+@app.route("/home")
 def home():
     return send_from_directory(FRONTEND_DIR, "index.html")
 
 
+# LOGIN
 @app.route("/login_page")
 @app.route("/login.html")
 def login_page():
     return send_from_directory(FRONTEND_DIR, "login.html")
 
-@app.route("/forgot_password_page")
-def forgot_password_page():
-    return send_from_directory(FRONTEND_DIR, "recovery.html")
 
-
+# REGISTER
 @app.route("/register_page")
 @app.route("/register.html")
 def register_page():
     return send_from_directory(FRONTEND_DIR, "register.html")
 
 
-@app.route("/restaurants_page")
-@app.route("/restaurants.html")
-def restaurants_page():
-    return send_from_directory(FRONTEND_DIR, "restaurants.html")
+# ACCOUNT (NEW FIX 🔥)
+@app.route("/account_page")
+@app.route("/account.html")
+def account_page():
+    return send_from_directory(FRONTEND_DIR, "account.html")
 
 
-@app.route("/menu")
+# FOOD INPUT
+@app.route("/food_input_page")
+@app.route("/food_input.html")
+def food_input_page():
+    return send_from_directory(FRONTEND_DIR, "food_input.html")
+
+
+# MENU
+@app.route("/menu_page")
 @app.route("/menu.html")
 def menu_page():
     return send_from_directory(FRONTEND_DIR, "menu.html")
 
 
-@app.route("/cart")
+# CART
+@app.route("/cart_page")
 @app.route("/cart.html")
 def cart_page():
     return send_from_directory(FRONTEND_DIR, "cart.html")
 
 
+# DASHBOARD
 @app.route("/dashboard_page")
 @app.route("/dashboard.html")
 def dashboard_page():
     return send_from_directory(FRONTEND_DIR, "dashboard.html")
 
 
-@app.route("/payment.html")
-def payment_page():
-    return send_from_directory(FRONTEND_DIR, "payment.html")
+# ADMIN
+@app.route("/admin_page")
+@app.route("/admin.html")
+def admin_page():
+    return send_from_directory(FRONTEND_DIR, "admin.html")
 
 
+# SUPPORT
+@app.route("/support_page")
+@app.route("/support.html")
+def support_page():
+    return send_from_directory(FRONTEND_DIR, "support.html")
+
+
+# ORDER SUCCESS
+@app.route("/order_success_page")
 @app.route("/order_success.html")
 def order_success():
     return send_from_directory(FRONTEND_DIR, "order_success.html")
 
 
+# RECOVERY
+@app.route("/forgot_password_page")
 @app.route("/recovery.html")
 def recovery_page():
     return send_from_directory(FRONTEND_DIR, "recovery.html")
@@ -109,35 +129,24 @@ def serve_js(filename):
 
 @app.route("/register", methods=["POST"])
 def register():
-
     data = request.json
-    name = data["name"]
-    email = data["email"]
-    password = data["password"]
 
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-
         cursor.execute(
             "INSERT INTO users (name,email,password) VALUES (?,?,?)",
-            (name, email, password)
+            (data["name"], data["email"], data["password"])
         )
-
         conn.commit()
-
         return jsonify({"message": "User registered successfully"})
-
     except Exception:
         return jsonify({"message": "Email already exists"})
-
     finally:
         cursor.close()
         conn.close()
 
-
-\
 
 # =============================
 # LOGIN API
@@ -145,21 +154,18 @@ def register():
 
 @app.route("/login", methods=["POST"])
 def login():
-
     data = request.json
-    email = data.get("email")
-    password = data.get("password")
-    print("LOGIN TRY:", email, password)   # DEBUG LINE
+
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         "SELECT id,name,email FROM users WHERE email=? AND password=?",
-        (email, password)
+        (data["email"], data["password"])
     )
 
     user = cursor.fetchone()
-    print("DB RESULT:", user)  # DEBUG LINE
+
     cursor.close()
     conn.close()
 
@@ -175,30 +181,24 @@ def login():
 
 
 # =============================
-# RESET PASSWORD API
+# RESET PASSWORD
 # =============================
 
 @app.route("/reset_password", methods=["POST"])
 def reset_password():
-
     data = request.json
-    email = data.get("email")
-    new_password = data.get("password")
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         "UPDATE users SET password=? WHERE email=?",
-        (new_password, email)
+        (data["password"], data["email"])
     )
 
     conn.commit()
 
-    if cursor.rowcount > 0:
-        message = "Password updated successfully"
-    else:
-        message = "Email not found"
+    message = "Password updated successfully" if cursor.rowcount > 0 else "Email not found"
 
     cursor.close()
     conn.close()
@@ -207,42 +207,68 @@ def reset_password():
 
 
 # =============================
-# FOOD ANALYSIS API
+# SUPPORT SYSTEM
 # =============================
 
-@app.route("/analyze_food", methods=["POST"])
-def analyze_food():
-
+@app.route("/submit_complaint", methods=["POST"])
+def submit_complaint():
     data = request.json
-    food = data["food"].lower()
 
-    food_data = {
-        "pizza": {"calories": 285, "category": "junk"},
-        "burger": {"calories": 350, "category": "junk"},
-        "salad": {"calories": 120, "category": "healthy"},
-        "idli": {"calories": 70, "category": "healthy"}
-    }
+    conn = sqlite3.connect("support.db")
+    cursor = conn.cursor()
 
-    if food in food_data:
+    cursor.execute("""
+        INSERT INTO complaints (user_email, issue, description)
+        VALUES (?, ?, ?)
+    """, (data["email"], data["issue"], data["description"]))
 
-        category = food_data[food]["category"]
-        calories = food_data[food]["calories"]
+    conn.commit()
+    conn.close()
 
-        health_score = 80 if category == "healthy" else 40
+    return jsonify({"message": "Complaint submitted successfully"})
 
-        return jsonify({
-            "food": food,
-            "calories": calories,
-            "category": category,
-            "health_score": health_score
+
+@app.route("/get_complaints", methods=["GET"])
+def get_complaints():
+    conn = sqlite3.connect("support.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM complaints")
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    complaints = []
+    for row in rows:
+        complaints.append({
+            "id": row[0],
+            "email": row[1],
+            "issue": row[2],
+            "description": row[3],
+            "status": row[4],
+            "reply": row[5]
         })
 
-    return jsonify({
-        "food": food,
-        "calories": 0,
-        "category": "unknown",
-        "health_score": 50
-    })
+    return jsonify(complaints)
+
+
+@app.route("/update_complaint", methods=["POST"])
+def update_complaint():
+    data = request.json
+
+    conn = sqlite3.connect("support.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE complaints
+        SET status=?, admin_reply=?
+        WHERE id=?
+    """, (data["status"], data["reply"], data["id"]))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Reply sent successfully"})
 
 
 # =============================
