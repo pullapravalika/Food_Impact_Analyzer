@@ -1,36 +1,27 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Your Cart</title>
+<title>Cart</title>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
 <header class="topbar">
-<h1>Food Impact Analyzer</h1>
-
-<nav>
-<a href="/restaurants.html">⬅ Continue Ordering</a>
-</nav>
-
+<h1>Your Cart 🛒</h1>
 </header>
 
-<section class="cart-container">
+<section class="dashboard">
 
-<h2>Your Cart</h2>
+<div id="cartItems"></div>
 
-<ul id="cartItems"></ul>
+<h2>Total: ₹<span id="totalPrice">0</span></h2>
 
-<h3>Total: ₹<span id="cartTotal">0</span></h3>
-
-<button onclick="placeOrder()">Place Order</button>
+<button onclick="goToPayment()">Proceed to Payment</button>
 
 </section>
 
 <script src="/js/script.js"></script>
 
 </body>
-
 </html>

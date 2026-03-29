@@ -1,95 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Menu</title>
+
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
 
+<!-- TOP BAR -->
 <header class="topbar">
-<h1 id="restaurantTitle">Menu</h1>
+
+<h1 id="restaurantName">Menu</h1>
 
 <nav>
-<a href="/restaurants_page">Restaurants</a>
-<a href="/cart_page">Cart</a>
-<a href="/dashboard_page">Dashboard</a>
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="goToCart()">🛒 Cart</button>
 </nav>
+
 </header>
 
+
+<!-- MENU SECTION -->
 <section class="food-container">
 
 <h2>Available Items</h2>
 
-<div id="menuContainer" class="restaurant-grid"></div>
+<div id="menuItems" class="restaurant-grid"></div>
 
 </section>
 
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 Food Impact Analyzer</p>
+</footer>
+
+
+<script src="/js/script.js"></script>
+
 <script>
 
-// 🔥 GET SELECTED RESTAURANT
-const restaurant = localStorage.getItem("restaurant");
+// GO BACK TO RESTAURANTS
+function goBack(){
+window.location.href = "/restaurants_page"
+}
 
-// Show restaurant name
-document.getElementById("restaurantTitle").innerText = restaurant.toUpperCase() + " Menu";
-
-
-// 🔥 MENU DATA
-const menus = {
-
-    "pizza_hut": [
-        {name: "Margherita Pizza", price: 200},
-        {name: "Veg Supreme", price: 300}
-    ],
-
-    "burger_king": [
-        {name: "Veg Burger", price: 120},
-        {name: "Chicken Burger", price: 180}
-    ],
-
-    "green_bowl": [
-        {name: "Salad Bowl", price: 150},
-        {name: "Healthy Wrap", price: 130}
-    ],
-
-    "south_india": [
-        {name: "Idli", price: 50},
-        {name: "Dosa", price: 80}
-    ]
-};
-
-
-// 🔥 LOAD MENU
-const menuItems = menus[restaurant];
-const container = document.getElementById("menuContainer");
-
-menuItems.forEach(item => {
-
-    container.innerHTML += `
-        <div class="restaurant-card">
-            <h3>${item.name}</h3>
-            <p>₹${item.price}</p>
-            <button onclick="addToCart('${item.name}', ${item.price})">
-                Add to Cart
-            </button>
-        </div>
-    `;
-});
-
-
-// 🔥 ADD TO CART FUNCTION
-function addToCart(name, price) {
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    cart.push({name, price});
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert(name + " added to cart!");
+// GO TO CART
+function goToCart(){
+window.location.href = "/cart_page"
 }
 
 </script>
 
 </body>
+
 </html>

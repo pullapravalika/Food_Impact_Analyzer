@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Support</title>
+<title>Support</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
 
-<h2>Raise a Complaint</h2>
+<header class="topbar">
+<h1>Food Impact Analyzer</h1>
+</header>
 
-<input type="email" id="email" placeholder="Enter your email"><br><br>
+<section style="padding:40px; text-align:center;">
 
-<select id="issue">
-    <option>Delivery Issue</option>
-    <option>Wrong Food</option>
-    <option>Late Delivery</option>
-</select><br><br>
+<h2>Customer Support</h2>
 
-<textarea id="description" placeholder="Describe your issue"></textarea><br><br>
+<select id="issueType">
+<option>Wrong Order</option>
+<option>Late Delivery</option>
+<option>Payment Issue</option>
+<option>Other</option>
+</select>
 
-<button onclick="submitComplaint()">Submit Complaint</button>
+<br><br>
+
+<textarea id="description" placeholder="Describe your issue"></textarea>
+
+<br><br>
+
+<button onclick="submitIssue()">Submit</button>
+
+</section>
 
 <script>
-function submitComplaint() {
-    const email = document.getElementById("email").value;
-    const issue = document.getElementById("issue").value;
-    const description = document.getElementById("description").value;
 
-    fetch("http://127.0.0.1:5000/submit_complaint", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email: email,
-            issue: issue,
-            description: description
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-    })
-    .catch(err => {
-        alert("Error submitting complaint");
-        console.error(err);
-    });
+function submitIssue(){
+
+let email = localStorage.getItem("userEmail")
+let issue = document.getElementById("issueType").value
+let description = document.getElementById("description").value
+
+fetch("/submit_issue",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ email, issue, description })
+})
+.then(res => res.json())
+.then(data=>{
+alert("Issue submitted successfully ✅")
+})
+
 }
+
 </script>
 
 </body>

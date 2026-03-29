@@ -2,23 +2,70 @@
 <html>
 <head>
 <title>Payment</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<h1>Payment</h1>
+<header class="topbar">
+<h1>Payment 💳</h1>
+</header>
 
-<select>
-<option>UPI</option>
-<option>Credit Card</option>
-<option>Debit Card</option>
-<option>Cash on Delivery</option>
-</select>
+<section class="dashboard">
 
-<button onclick="completePayment()">Pay Now</button>
+<h2>Total Amount: ₹<span id="totalAmount">0</span></h2>
 
-<script src="js/script.js"></script>
+<h3>Select Payment Method</h3>
+
+<button onclick="placeOrder()">Cash on Delivery</button>
+<button onclick="placeOrder()">UPI</button>
+<button onclick="placeOrder()">Card</button>
+
+</section>
+
+<script src="/js/script.js"></script>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+let total = 0
+
+cart.forEach(item => total += item.price)
+
+document.getElementById("totalAmount").innerText = total
+
+
+function placeOrder(){
+
+let email = localStorage.getItem("userEmail")
+
+if(cart.length === 0){
+alert("Cart is empty ❌")
+return
+}
+
+fetch("/place_order",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ cart, email })
+})
+.then(res => res.json())
+.then(data => {
+
+alert("Payment Successful ✅")
+
+localStorage.removeItem("cart")
+
+window.location.href = "/dashboard_page"
+
+})
+.catch(()=>{
+alert("Something went wrong ❌")
+})
+
+}
+
+</script>
 
 </body>
 </html>

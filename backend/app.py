@@ -1,116 +1,120 @@
 import sys
 import os
-import sqlite3
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-
-from database.db_connection import get_connection
-from backend.order_api import order_bp
+import sqlite3
 
 # =============================
-# APP SETUP
+# PATH SETUP
 # =============================
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+DB_PATH = os.path.join(BASE_DIR, "foodimpact.db")
 
 app = Flask(__name__)
 CORS(app)
 
-app.register_blueprint(order_bp)
 
 # =============================
-# PAGE ROUTES (ALL FIXED ✅)
+# DB CONNECTION
+# =============================
+
+def get_connection():
+    return sqlite3.connect(DB_PATH)
+
+
+# =============================
+# CREATE TABLES
+# =============================
+
+def create_tables():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # USERS
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        password TEXT
+    )
+    """)
+
+    # ORDERS
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT,
+        food TEXT,
+        price INTEGER,
+        category TEXT,
+        time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    # SUPPORT
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS support_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT,
+        issue_type TEXT,
+        description TEXT,
+        status TEXT DEFAULT 'Pending'
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+create_tables()
+
+
+# =============================
+# FRONTEND ROUTES
 # =============================
 
 @app.route("/")
-@app.route("/home")
 def home():
-    return send_from_directory(FRONTEND_DIR, "index.html")
+    return send_from_directory(FRONTEND_DIR, "login.html")
 
-
-# LOGIN
 @app.route("/login_page")
-@app.route("/login.html")
 def login_page():
     return send_from_directory(FRONTEND_DIR, "login.html")
 
-
-# REGISTER
 @app.route("/register_page")
-@app.route("/register.html")
 def register_page():
     return send_from_directory(FRONTEND_DIR, "register.html")
-
-
-# ACCOUNT (NEW FIX 🔥)
-@app.route("/account_page")
-@app.route("/account.html")
-def account_page():
-    return send_from_directory(FRONTEND_DIR, "account.html")
-
 
 @app.route("/restaurants_page")
 def restaurants_page():
     return send_from_directory(FRONTEND_DIR, "restaurants.html")
 
-# FOOD INPUT
-@app.route("/food_input_page")
-@app.route("/food_input.html")
-def food_input_page():
-    return send_from_directory(FRONTEND_DIR, "food_input.html")
-
-
-# MENU
 @app.route("/menu_page")
-@app.route("/menu.html")
 def menu_page():
     return send_from_directory(FRONTEND_DIR, "menu.html")
 
-
-# CART
 @app.route("/cart_page")
-@app.route("/cart.html")
 def cart_page():
     return send_from_directory(FRONTEND_DIR, "cart.html")
 
+@app.route("/payment_page")
+def payment_page():
+    return send_from_directory(FRONTEND_DIR, "payment.html")
 
-# DASHBOARD
 @app.route("/dashboard_page")
-@app.route("/dashboard.html")
 def dashboard_page():
     return send_from_directory(FRONTEND_DIR, "dashboard.html")
 
+@app.route("/account_page")
+def account_page():
+    return send_from_directory(FRONTEND_DIR, "account.html")
 
-# ADMIN
 @app.route("/admin_page")
-@app.route("/admin.html")
 def admin_page():
     return send_from_directory(FRONTEND_DIR, "admin.html")
-
-
-# SUPPORT
-@app.route("/support_page")
-@app.route("/support.html")
-def support_page():
-    return send_from_directory(FRONTEND_DIR, "support.html")
-
-
-# ORDER SUCCESS
-@app.route("/order_success_page")
-@app.route("/order_success.html")
-def order_success():
-    return send_from_directory(FRONTEND_DIR, "order_success.html")
-
-
-# RECOVERY
-@app.route("/forgot_password_page")
-@app.route("/recovery.html")
-def recovery_page():
-    return send_from_directory(FRONTEND_DIR, "recovery.html")
 
 
 # =============================
@@ -121,14 +125,13 @@ def recovery_page():
 def serve_css(filename):
     return send_from_directory(os.path.join(FRONTEND_DIR, "css"), filename)
 
-
 @app.route("/js/<path:filename>")
 def serve_js(filename):
     return send_from_directory(os.path.join(FRONTEND_DIR, "js"), filename)
 
 
 # =============================
-# REGISTER API
+# REGISTER
 # =============================
 
 @app.route("/register", methods=["POST"])
@@ -145,15 +148,14 @@ def register():
         )
         conn.commit()
         return jsonify({"message": "User registered successfully"})
-    except Exception:
-        return jsonify({"message": "Email already exists"})
+    except:
+        return jsonify({"message": "Email already registered"})
     finally:
-        cursor.close()
         conn.close()
 
 
 # =============================
-# LOGIN API
+# LOGIN
 # =============================
 
 @app.route("/login", methods=["POST"])
@@ -164,23 +166,18 @@ def login():
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id,name,email FROM users WHERE email=? AND password=?",
+        "SELECT * FROM users WHERE email=? AND password=?",
         (data["email"], data["password"])
     )
 
     user = cursor.fetchone()
-
-    cursor.close()
     conn.close()
 
     if user:
         return jsonify({
             "message": "Login successful",
-            "user_id": user[0],
-            "name": user[1],
-            "email": user[2]
+            "user_id": user[0]
         })
-
     return jsonify({"message": "Invalid credentials"})
 
 
@@ -201,78 +198,172 @@ def reset_password():
     )
 
     conn.commit()
-
-    message = "Password updated successfully" if cursor.rowcount > 0 else "Email not found"
-
-    cursor.close()
     conn.close()
 
-    return jsonify({"message": message})
+    return jsonify({"message": "Password updated successfully"})
+
+
+# =============================
+# PLACE ORDER
+# =============================
+
+@app.route("/place_order", methods=["POST"])
+def place_order():
+
+    try:
+        data = request.json
+        print("DATA RECEIVED:", data)
+
+        email = data.get("email")
+        cart = data.get("cart", [])
+
+        if not email or not cart:
+            return jsonify({"error": "Missing data"}), 400
+
+        food_category = {
+            "pizza": "junk",
+            "burger": "junk",
+            "fried chicken": "junk",
+            "salad": "healthy",
+            "idli": "healthy",
+            "dosa": "healthy"
+        }
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        for item in cart:
+
+            food = item.get("name") or item.get("food")
+            price = item.get("price") or item.get("cost") or 0
+
+            if not food:
+                continue
+
+            category = food_category.get(food.lower(), "junk")
+
+            cursor.execute("""
+                INSERT INTO orders (user_id, food_name, price, category, status)
+                VALUES (?,?,?,?,?)
+            """, (user_id, food, price, category, "ordered"))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({"message": "Order saved"})
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+# =============================
+# DASHBOARD DATA
+# =============================
+
+@app.route("/dashboard_data/<int:user_id>")
+def dashboard_data(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT SUM(price) FROM orders WHERE user_id=?", (user_id,))
+    total = cursor.fetchone()[0] or 0
+
+    cursor.execute("SELECT COUNT(*) FROM orders WHERE user_id=? AND category='healthy'", (user_id,))
+    healthy = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM orders WHERE user_id=? AND category='junk'", (user_id,))
+    junk = cursor.fetchone()[0]
+
+    conn.close()
+
+    return jsonify({
+        "calories": total,
+        "healthy": healthy,
+        "junk": junk
+    })
+
+# =============================
+# ORDER HISTORY
+# =============================
+
+@app.route("/get_orders/<email>")
+def get_orders(email):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT food, price, category, time FROM orders WHERE email=?",
+        (email,)
+    )
+
+    data = cursor.fetchall()
+    conn.close()
+
+    return jsonify(data)
 
 
 # =============================
 # SUPPORT SYSTEM
 # =============================
 
-@app.route("/submit_complaint", methods=["POST"])
-def submit_complaint():
+@app.route("/submit_issue", methods=["POST"])
+def submit_issue():
+
     data = request.json
 
-    conn = sqlite3.connect("support.db")
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO complaints (user_email, issue, description)
-        VALUES (?, ?, ?)
+        INSERT INTO support_requests (user_email, issue_type, description)
+        VALUES (?,?,?)
     """, (data["email"], data["issue"], data["description"]))
 
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Complaint submitted successfully"})
+    return jsonify({"message": "Issue submitted"})
 
 
-@app.route("/get_complaints", methods=["GET"])
-def get_complaints():
-    conn = sqlite3.connect("support.db")
+# =============================
+# ADMIN PANEL
+# =============================
+
+@app.route("/get_issues")
+def get_issues():
+
+    conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM complaints")
-    rows = cursor.fetchall()
+    cursor.execute("SELECT * FROM support_requests")
+    data = cursor.fetchall()
 
     conn.close()
 
-    complaints = []
-    for row in rows:
-        complaints.append({
-            "id": row[0],
-            "email": row[1],
-            "issue": row[2],
-            "description": row[3],
-            "status": row[4],
-            "reply": row[5]
-        })
-
-    return jsonify(complaints)
+    return jsonify(data)
 
 
-@app.route("/update_complaint", methods=["POST"])
-def update_complaint():
-    data = request.json
+@app.route("/resolve_issue/<int:id>", methods=["POST"])
+def resolve_issue(id):
 
-    conn = sqlite3.connect("support.db")
+    conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        UPDATE complaints
-        SET status=?, admin_reply=?
-        WHERE id=?
-    """, (data["status"], data["reply"], data["id"]))
+    cursor.execute(
+        "UPDATE support_requests SET status='Resolved' WHERE id=?",
+        (id,)
+    )
 
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Reply sent successfully"})
+    return jsonify({"message": "Resolved"})
+
+@app.route("/support_page")
+def support_page():
+    return send_from_directory(FRONTEND_DIR, "support.html")
 
 
 # =============================
