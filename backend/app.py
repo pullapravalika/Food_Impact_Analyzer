@@ -181,27 +181,6 @@ def login():
     return jsonify({"message": "Invalid credentials"})
 
 
-# =============================
-# RESET PASSWORD
-# =============================
-
-@app.route("/reset_password", methods=["POST"])
-def reset_password():
-    data = request.json
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "UPDATE users SET password=? WHERE email=?",
-        (data["password"], data["email"])
-    )
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"message": "Password updated successfully"})
-
 
 # =============================
 # PLACE ORDER
@@ -365,6 +344,27 @@ def resolve_issue(id):
 def support_page():
     return send_from_directory(FRONTEND_DIR, "support.html")
 
+@app.route("/forgot_password_page")
+def forgot_password_page():
+    return send_from_directory(FRONTEND_DIR, "forgot_password.html")
+
+
+@app.route("/reset_password", methods=["POST"])
+def reset_password():
+    data = request.json
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE users SET password=? WHERE email=?",
+        (data["password"], data["email"])
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Password updated successfully"})
 
 # =============================
 # RUN SERVER
